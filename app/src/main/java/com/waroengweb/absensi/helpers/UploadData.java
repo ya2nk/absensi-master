@@ -52,8 +52,7 @@ public class UploadData {
 
         pd = new ProgressDialog(context);
         pd.setMessage("Upload Data...");
-        db = Room.databaseBuilder(context,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(context);
     }
 
     public void setUploadData(String jenis)

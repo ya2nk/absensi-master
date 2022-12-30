@@ -41,6 +41,7 @@ import com.waroengweb.absensi.app.AppController;
 import com.waroengweb.absensi.app.VolleyMultipartRequest;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Absen;
+import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.Infoxx;
 import com.waroengweb.absensi.radioButton.PresetRadioGroup;
 import com.waroengweb.absensi.radioButton.PresetValueButton;
@@ -98,8 +99,7 @@ public class DataPresensi extends AppCompatActivity {
             }
         }));
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
 
         mSetDurationPresetRadioGroup = (PresetRadioGroup) findViewById(R.id.preset_time_radio_group);

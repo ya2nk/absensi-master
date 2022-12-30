@@ -15,10 +15,12 @@ public class Dinas {
     private int id;
     private String nip;
     private String foto;
+    private String fotoBerkas;
     private int uploaded;
     private int approved;
     private Date tanggal,tanggal2;
     private String typeDinas;
+    private String jenisDinas;
 
     public int getId() {
         return id;
@@ -82,5 +84,21 @@ public class Dinas {
 
     public void setTypeDinas(String typeDinas) {
         this.typeDinas = typeDinas;
+    }
+
+    public String getJenisDinas() {
+        return jenisDinas;
+    }
+
+    public void setJenisDinas(String jenisDinas) {
+        this.jenisDinas = jenisDinas;
+    }
+
+    public String getFotoBerkas() {
+        return fotoBerkas;
+    }
+
+    public void setFotoBerkas(String fotoBerkas) {
+        this.fotoBerkas = fotoBerkas;
     }
 }

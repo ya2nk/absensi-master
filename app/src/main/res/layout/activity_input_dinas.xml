@@ -43,7 +43,7 @@
             android:background="@drawable/image_border"
             android:padding="5dp"
             android:scaleType="fitXY"
-            android:src="@drawable/doc" />
+            android:src="@drawable/index" />
 
         <Button
             android:id="@+id/take_picture"
@@ -54,7 +54,7 @@
             android:layout_marginTop="60dp"
             android:background="@drawable/button_transparan"
             android:text="Ambil Photo"
-            android:textColor="#0A7FDB" />
+            android:textColor="#090909" />
 
         <ImageView
             android:id="@+id/preview2"
@@ -75,7 +75,7 @@
             android:layout_marginLeft="175dp"
             android:background="@drawable/button_transparan"
             android:text="Photo/Gambar"
-            android:textColor="#00BCD4"
+            android:textColor="#090909"
             android:textSize="11dp"/>
 
     </RelativeLayout>
@@ -134,33 +134,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tanggal_lbl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp">
-            <EditText
-                android:id="@+id/tanggal"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tanggal Awal"
-                android:inputType="none"
-                android:focusable="false"/>
-        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tanggal_lbl2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp">
-            <EditText
-                android:id="@+id/tanggal2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Tanggal Akhir"
-                android:inputType="none"
-                android:focusable="false"/>
-        </com.google.android.material.textfield.TextInputLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -186,10 +160,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sore" />
-            <RadioButton android:id="@+id/fullday"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1 Hari" />
+
         </RadioGroup>
         <Button
             android:layout_width="match_parent"

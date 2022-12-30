@@ -28,6 +28,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.waroengweb.absensi.adapter.PesanAdapter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Pesan;
+import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.DividerItemDecoration;
 import com.waroengweb.absensi.helpers.GetAsyncPesan;
 
@@ -66,8 +67,7 @@ public class PesanActivity extends AppCompatActivity implements PesanAdapter.Mes
 
         actionModeCallback = new ActionModeCallback();
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         getInbox("");
 

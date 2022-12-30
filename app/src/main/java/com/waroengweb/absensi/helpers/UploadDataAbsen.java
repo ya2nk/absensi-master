@@ -33,6 +33,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,8 +56,7 @@ public class UploadDataAbsen {
 
         pd = new ProgressDialog(context);
         pd.setMessage("Upload Data...");
-        db = Room.databaseBuilder(context,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(context);
     }
 
     public void setUploadData(Absen absen)
@@ -176,7 +178,12 @@ public class UploadDataAbsen {
 
 
                     if (absen.getFoto() != null){
-                        params.put("photo["+absen.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",convertImageToBytes(absen.getFoto())));
+                        try {
+                            params.put("photo["+absen.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",readFile(new File(absen.getFoto()))));
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
 
 
@@ -200,6 +207,24 @@ public class UploadDataAbsen {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         return stream.toByteArray();
+    }
+
+    public static byte[] readFile(File file) throws IOException {
+        // Open file
+        RandomAccessFile f = new RandomAccessFile(file, "r");
+        try {
+            // Get and check length
+            long longlength = f.length();
+            int length = (int) longlength;
+            if (length != longlength)
+                throw new IOException("File size >= 2 GB");
+            // Read file and return data
+            byte[] data = new byte[length];
+            f.readFully(data);
+            return data;
+        } finally {
+            f.close();
+        }
     }
 
     public static String encrypt(String s){

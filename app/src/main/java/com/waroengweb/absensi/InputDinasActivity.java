@@ -50,13 +50,11 @@ import id.zelory.compressor.Compressor;
 
 public class InputDinasActivity extends AppCompatActivity {
 
-    EditText tglText,tglText2;
-    TextInputLayout tglLayout1,tglLayout2;
     Calendar myCalendar;
     int editTextSelect = 0;
     Button takePicture,saveData,takePicture2;
     Uri filePhoto,filePhoto2;
-    String fileString,fileString2,typeText="Pagi";
+    String fileString,fileString2,typeText="Pagi",jenisText="dalam_kota";
     ImageView imagePhoto,imagePhoto2;
     AutoCompleteTextView nip;
     AppDatabase db;
@@ -71,21 +69,7 @@ public class InputDinasActivity extends AppCompatActivity {
 
         myCalendar = Calendar.getInstance();
 
-        tglText = (EditText)findViewById(R.id.tanggal);
-        tglText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDateDialog(0);
-            }
-        });
 
-        tglText2 = (EditText)findViewById(R.id.tanggal2);
-        tglText2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openDateDialog(1);
-            }
-        });
 
         takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
@@ -140,18 +124,13 @@ public class InputDinasActivity extends AppCompatActivity {
                     case R.id.sore:
                         typeText = "Sore";
                         break;
-                    case R.id.fullday:
-                        typeText = "Fullday";
-                        break;
+
                 }
             }
         });
 
-        tglLayout1 = (TextInputLayout) findViewById(R.id.tanggal_lbl);
-        tglLayout2 = (TextInputLayout) findViewById(R.id.tanggal_lbl2);
 
-        tglLayout1.setVisibility(View.GONE);
-        tglLayout2.setVisibility(View.GONE);
+
 
 
         jenisDinas = (RadioGroup)findViewById(R.id.jenis);
@@ -160,13 +139,11 @@ public class InputDinasActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                 switch(checkedId) {
                     case R.id.dalam_dinas:
-                        tglLayout1.setVisibility(View.GONE);
-                        tglLayout2.setVisibility(View.GONE);
+                        jenisText = "dalam_dinas";
                         typeDinas.setVisibility(View.VISIBLE);
                         break;
                     case R.id.luar_dinas:
-                        tglLayout1.setVisibility(View.VISIBLE);
-                        tglLayout2.setVisibility(View.VISIBLE);
+                        jenisText = "luar_dinas";
                         typeDinas.setVisibility(View.GONE);
                         break;
 
@@ -175,42 +152,9 @@ public class InputDinasActivity extends AppCompatActivity {
         });
     }
 
-    private void openDateDialog(int tglNumber)
-    {
-
-        editTextSelect = tglNumber;
-        int mYear = myCalendar.get(Calendar.YEAR);
-        int mMonth = myCalendar.get(Calendar.MONTH);
-        int mDay = myCalendar.get(Calendar.DAY_OF_MONTH);
-        DatePickerDialog dpDialog = new DatePickerDialog(this, myDateListener, mYear, mMonth, mDay);
-        dpDialog.show();
-        if (tglNumber == 0){
-            Calendar sevenDaysAgo = (Calendar) myCalendar.clone();
-            sevenDaysAgo.add(Calendar.DATE, -7);
-            dpDialog.getDatePicker().setMinDate(sevenDaysAgo.getTimeInMillis());
-        }
-
-    }
-
-    private DatePickerDialog.OnDateSetListener myDateListener = new DatePickerDialog.OnDateSetListener() {
-        @Override
-        public void onDateSet(DatePicker arg0, int year, int monthOfYear, int dayOfMonth) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.YEAR, year);
-            calendar.set(Calendar.MONTH, monthOfYear);
-            calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-
-            String formatTanggal = "dd-MM-yyyy";
-            SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
-            if (editTextSelect == 0){
-                tglText.setText(sdf.format(calendar.getTime()));
-            } else {
-                tglText2.setText(sdf.format(calendar.getTime()));
-            }
 
 
-        }
-    };
+
 
     public void takePicture()
     {
@@ -397,19 +341,12 @@ public class InputDinasActivity extends AppCompatActivity {
             dinas.setApproved(0);
             dinas.setUploaded(0);
             dinas.setFoto(fileString);
+            dinas.setFotoBerkas(fileString2);
             dinas.setTypeDinas(typeText);
+            dinas.setTanggal(new Date());
+            dinas.setTanggal2(new Date());
+            dinas.setJenisDinas(jenisText);
 
-            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date tanggalNew,tanggalNew2;
-
-            try {
-                tanggalNew = formatter.parse(tglText.getText().toString());
-                tanggalNew2 = formatter.parse(tglText2.getText().toString());
-                dinas.setTanggal(tanggalNew);
-                dinas.setTanggal2(tanggalNew2);
-            } catch (ParseException pe) {
-                pe.printStackTrace();
-            }
 
             db.DinasDao().insertDinas(dinas);
             Toast.makeText(this, "DATA BERHASIL DISIMPAN", Toast.LENGTH_SHORT).show();
@@ -421,12 +358,12 @@ public class InputDinasActivity extends AppCompatActivity {
     private void clearDinas()
     {
         nip.setText("");
-        tglText2.setText("");
-        tglText.setText("");
+
         fileString = null;
+        fileString2 = null;
         takePicture.setText("Photo/Gambar");
         takePicture2.setText("Photo/Gambar");
-        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
         imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
     }
 }

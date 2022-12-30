@@ -52,8 +52,7 @@ public class UploadDataDinas {
 
         pd = new ProgressDialog(context);
         pd.setMessage("Upload Data...");
-        db = Room.databaseBuilder(context,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(context);
     }
 
     public void setUploadData(Dinas dinas)
@@ -181,6 +180,10 @@ public class UploadDataDinas {
 
                     if (dinas.getFoto() != null){
                         params.put("photo["+dinas.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",convertImageToBytes(dinas.getFoto())));
+                    }
+
+                    if (dinas.getFotoBerkas() != null){
+                        params.put("photo_berkas["+dinas.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(dinas.getFotoBerkas())));
                     }
 
 

@@ -20,6 +20,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.waroengweb.absensi.adapter.IjinAdapter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Ijin;
+import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.UploadData;
 import com.waroengweb.absensi.radioButton.PresetRadioGroup;
 import com.waroengweb.absensi.radioButton.PresetValueButton;
@@ -53,8 +54,7 @@ public class CutiActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         mSetDurationPresetRadioGroup = (PresetRadioGroup) findViewById(R.id.preset_time_radio_group);
 

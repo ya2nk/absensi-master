@@ -12,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.waroengweb.absensi.database.AppDatabase;
+import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.TimeSetting;
 import com.waroengweb.absensi.helpers.UploadData;
 import com.waroengweb.absensi.ui.main.SectionsPagerAdapter;
@@ -62,8 +63,7 @@ public class IjinActivity extends AppCompatActivity {
         pd = new ProgressDialog(this);
         pd.setMessage("Uploading Data..");
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         timeSetting = new TimeSetting(this);
         timeSetting.checkDateAndTimezoneSetting(IjinActivity.this);

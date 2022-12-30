@@ -11,6 +11,7 @@ import androidx.room.Room;
 
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Pesan;
+import com.waroengweb.absensi.helpers.DBHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -24,8 +25,7 @@ public class DetailPesanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_pesan);
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
         judul = (TextView)findViewById(R.id.judul);
 
         dari = (TextView)findViewById(R.id.dari);

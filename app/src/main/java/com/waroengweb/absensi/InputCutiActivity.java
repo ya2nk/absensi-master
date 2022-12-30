@@ -35,6 +35,7 @@ import com.basgeekball.awesomevalidation.utility.RegexTemplate;
 import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Ijin;
+import com.waroengweb.absensi.helpers.DBHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -113,8 +114,7 @@ public class InputCutiActivity extends AppCompatActivity {
             }
         });
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         nip = (AutoCompleteTextView)findViewById(R.id.nip);
         List<String> NIP = db.AbsenDao().getNip();

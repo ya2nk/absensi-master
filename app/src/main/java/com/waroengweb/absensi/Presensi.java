@@ -55,6 +55,8 @@ import com.waroengweb.absensi.app.AppController;
 import com.waroengweb.absensi.app.NetworkHelper;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Absen;
+import com.waroengweb.absensi.helpers.DBHelper;
+import com.waroengweb.absensi.helpers.ExifHelper;
 import com.waroengweb.absensi.helpers.Session;
 import com.waroengweb.absensi.helpers.TimeSetting;
 
@@ -108,8 +110,7 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
         setContentView(R.layout.activity_presensi);
 
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +219,12 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
             imagePhoto.setImageURI(Uri.parse(fileString));
             imagePhoto.requestFocus();
             takePicture.setText("Ganti Photo");
+            try {
+                ExifHelper.copyExif(filePhoto.getPath(), fileString);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
         if (googleApiClient != null) {
             googleApiClient.connect();
@@ -238,6 +245,7 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
         File compressFile;
         try {
             compressFile = new Compressor(this).compressToFile(new File(fileData.getPath()));
+
             return compressFile;
         } catch (Exception e){
             e.printStackTrace();

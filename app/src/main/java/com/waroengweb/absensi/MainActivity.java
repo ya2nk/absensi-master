@@ -19,6 +19,7 @@ import androidx.room.Room;
 
 import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.database.AppDatabase;
+import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.GetAsyncPesan;
 import com.waroengweb.absensi.helpers.Session;
 
@@ -58,8 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         openDialog();
 
-        db = Room.databaseBuilder(this,
-                AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
+        db = DBHelper.builder(this);
 
         getPesan();
 

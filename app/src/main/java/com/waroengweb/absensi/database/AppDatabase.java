@@ -14,7 +14,7 @@ import com.waroengweb.absensi.database.entity.Dinas;
 import com.waroengweb.absensi.database.entity.Ijin;
 import com.waroengweb.absensi.database.entity.Pesan;
 
-@Database(entities = {Absen.class, Ijin.class, Dinas.class, Pesan.class},version = 13,exportSchema = false)
+@Database(entities = {Absen.class, Ijin.class, Dinas.class, Pesan.class},version = 14,exportSchema = false)
 @TypeConverters({DateTypeConverter.class})
 public abstract class AppDatabase extends RoomDatabase {
     public abstract AbsenDao AbsenDao();
