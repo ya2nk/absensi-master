@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.waroengweb.absensi">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature android:name="android.hardware.camera.flash" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" />
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <queries>
+        <!-- Browser -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+        <!-- Camera -->
+        <intent>
+            <action android:name="android.media.action.IMAGE_CAPTURE" />
+        </intent>
+        <!-- Gallery -->
+        <intent>
+            <action android:name="android.intent.action.GET_CONTENT" />
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.PICK" />
+            <data android:mimeType="image/*" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.CHOOSER" />
+        </intent>
+    </queries>
+
+    <application
+        android:requestLegacyExternalStorage="true"
+        android:name=".app.AppController"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher_new"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:roundIcon="@mipmap/ic_launcher_new_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".NilaiActivity" android:exported="false"></activity>
+        <activity android:name=".DetailPesanActivity" android:exported="false"/>
+        <activity android:name=".PesanActivity" android:exported="false"/>
+        <activity android:name=".LoginActivity" android:exported="false"/>
+        <activity android:name=".InputDinasActivity" android:exported="false"/>
+        <activity
+            android:name=".DinasActivity"
+            android:label="@string/title_activity_dinas"
+            android:theme="@style/AppTheme.NoActionBar" android:exported="false"/>
+        <activity
+            android:name=".InputCutiActivity"
+            android:label="@string/title_activity_input_cuti"
+            android:theme="@style/AppTheme.NoActionBar" android:exported="false"/>
+        <activity
+            android:name=".CutiActivity"
+            android:label="@string/title_activity_cuti"
+            android:theme="@style/AppTheme.NoActionBar" android:exported="false"/>
+        <activity
+            android:name=".IjinActivity"
+            android:label="@string/title_activity_ijin"
+            android:theme="@style/AppTheme.NoActionBar" android:exported="false"/>
+        <activity
+            android:name=".BasicActivity"
+            android:label="@string/title_activity_basic"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".DataPresensi" android:exported="false"/>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDCY6YcV_VBOekEcMCZFw-hnf5K5WO1pCM" />
+        <meta-data
+            android:name="com.here.sdk.access_key_id"
+            android:value="qxNTzRVdyaiO2VQLc7bBXw" />
+        <meta-data
+            android:name="com.here.sdk.access_key_secret"
+            android:value="nnmkHY050BOKqDFzXxV82T4__Pck3W6KpdYDnaBq6MQ9OQiQ-9WqqBtNGfLpFY3iBbfUjfn2YXAsTvMEjUUHuA" />
+
+        <activity android:name=".Presensi" />
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true"
+            tools:replace="android:authorities">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"
+                tools:replace="android:resource" />
+        </provider>
+    </application>
+
+</manifest>

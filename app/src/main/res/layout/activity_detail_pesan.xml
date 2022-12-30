@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".DetailPesanActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="140dp"
+            android:background="@drawable/bg_gradient">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="135dp"
+                android:layout_marginBottom="20dp"
+                android:src="@drawable/kabupaten_kerinci" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/judul"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/dari"
+            android:layout_marginBottom="15dp"/>
+        <WebView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:id="@+id/webView"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

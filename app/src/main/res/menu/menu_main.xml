@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:mContext="com.waroengweb.absensi.PesanActivity">
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/ic_search_white_24dp"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        android:title="Search" />
+    <item
+        android:id="@+id/action_reload"
+        android:icon="@drawable/ic_refresh_black_24dp"
+        android:title="Reload"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/action_chart"
+        android:icon="@drawable/ic_baseline_insert_chart_24"
+        android:title="Reload"
+        app:showAsAction="always"/>
+</menu>

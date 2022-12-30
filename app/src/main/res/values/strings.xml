@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Kerinci Presensi</string>
+    <string name="required">Field Is Required</string>
+    <string name="error_number">Hanya Bisa Input Angka</string>
+    <string name="title_activity_basic">BasicActivity</string>
+    <string name="title_time_preset_30">30</string>
+    <string name="unit_seconds">Seconds</string>
+    <string name="title_time_preset_120">120</string>
+    <string name="title_time_preset_60">60</string>
+    <string name="title_settings_set_duration">Set duration</string>
+    <string name="hari_ini">1 Hari</string>
+    <string name="minggu_ini">7 Hari</string>
+    <string name="bulan_ini">30 Hari</string>
+    <string name="semua">Semua</string>
+    <string name="title_activity_ijin">DATA IJIN</string>
+    <string name="tab_text_1">Input Ijin</string>
+    <string name="tab_text_2">Data Ijin</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_cuti">CutiActivity</string>
+    <string name="title_activity_data_cuti">DataCutiActivity</string>
+    <string name="title_activity_input_cuti">Input Cuti</string>
+    <string name="title_activity_dinas">DinasActivity</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_search">Search</string>
+    <string name="action_delete">Delete</string>
+    <string name="err_xxx">Aplikasi tidak bisa digunakan jika pengaturan waktu tidak otomatis!!</string>
+    <string name="aaa">api/get-info2</string>
+    <string name="title_name">kerincikab07091983</string>
+</resources>
