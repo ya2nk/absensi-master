@@ -72,9 +72,10 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginTop="60dp"
-            android:layout_marginLeft="175dp"
+            android:layout_marginLeft="185dp"
             android:background="@drawable/button_transparan"
-            android:text="Photo/Gambar"
+            android:text="SPT"
+            android:textAlignment="center"
             android:textColor="#090909"
             android:textSize="11dp"/>
 
@@ -109,12 +110,12 @@
             <RadioButton android:id="@+id/dalam_dinas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dalam Kota"
+                android:text="Dalam Daerah"
                 android:checked="true"/>
             <RadioButton android:id="@+id/luar_dinas"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Luar Kota" />
+                android:text="Luar Daerah" />
 
         </RadioGroup>
 
@@ -133,7 +134,24 @@
                 android:singleLine="true"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tanggal"
+            android:layout_marginTop="5dp"
+            android:textSize="16dp"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#636262"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="16dp"
+            android:id="@+id/tgl_txt"
+            android:textColor="#2196F3"/>
 
         <TextView
             android:layout_width="match_parent"

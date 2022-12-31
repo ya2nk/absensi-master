@@ -1,7 +1,7 @@
 package com.waroengweb.absensi;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,15 +12,15 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.DatePicker;
-import android.widget.EditText;
+
 import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -69,7 +69,9 @@ public class InputDinasActivity extends AppCompatActivity {
 
         myCalendar = Calendar.getInstance();
 
-
+        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
+        TextView txtTgl = (TextView) findViewById(R.id.tgl_txt);
+        txtTgl.setText(timeStamp);
 
         takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
@@ -129,10 +131,6 @@ public class InputDinasActivity extends AppCompatActivity {
             }
         });
 
-
-
-
-
         jenisDinas = (RadioGroup)findViewById(R.id.jenis);
         jenisDinas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -152,59 +150,33 @@ public class InputDinasActivity extends AppCompatActivity {
         });
     }
 
-
-
-
-
     public void takePicture()
     {
-        final CharSequence[] options = {"Ambil Photo", "Pilih Dari Galeri", "Batal"};
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Silakan Pilih ambil photo atau dari galeri");
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Ambil Photo")) {
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    Intent i;
-                    i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File pictureFile = null;
-                    try {
-                        pictureFile = getOutputMediaFile();
-                    } catch (IOException ex) {
-                        Toast.makeText(InputDinasActivity.this,
-                                "Photo file can't be created, please try again",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    filePhoto = Uri.fromFile(pictureFile);
-                    Uri photoUri = FileProvider.getUriForFile(InputDinasActivity.this,
-                            "com.waroengweb.absensi.provider",pictureFile
-                    );
-                    i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-                    } else {
-                        i.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                    }
-                    i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-                    startActivityForResult(i,201);
-
-                } else if (options[item].equals("Pilih Dari Galeri")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 202);//one can be replaced with any action code
-
-                } else if (options[item].equals("Batal")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+        Intent i;
+        i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File pictureFile = null;
+        try {
+            pictureFile = getOutputMediaFile();
+        } catch (IOException ex) {
+            Toast.makeText(InputDinasActivity.this,
+                    "Photo file can't be created, please try again",
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        filePhoto = Uri.fromFile(pictureFile);
+        Uri photoUri = FileProvider.getUriForFile(InputDinasActivity.this,
+                "com.waroengweb.absensi.provider",pictureFile
+        );
+        i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+            i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+        } else {
+            i.putExtra("android.intent.extras.CAMERA_FACING", 1);
+        }
+        i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+        startActivityForResult(i,201);
     }
 
     public void takePicture2()

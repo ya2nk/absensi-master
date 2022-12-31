@@ -35,7 +35,7 @@ public interface IjinDao {
     @Query("SELECT * FROM ijin WHERE tanggal BETWEEN :dateStart AND :dateEnd AND jenisIjin = 'Cuti' ORDER BY tanggal DESC")
     List<Ijin> getAllCutiBetween(long dateStart,long dateEnd);
 
-    @Query("SELECT * FROM ijin WHERE uploaded=1 AND approved=0 AND jenisIjin != 'Cuti' ORDER BY tanggal")
+    @Query("SELECT * FROM ijin WHERE uploaded=1 AND approved=0 ORDER BY tanggal")
     List<Ijin> getAllIjinUploadedAndNotApprove();
 
     @Query("UPDATE ijin SET uploaded=1 WHERE id=:id")
@@ -46,4 +46,7 @@ public interface IjinDao {
 
     @Query("DELETE FROM ijin WHERE id=:id")
     void deleteIjin(int id);
+
+    @Query("SELECT id FROM ijin WHERE approved=0")
+    List<Integer> getAllIdIjin();
 }

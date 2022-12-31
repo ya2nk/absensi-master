@@ -19,6 +19,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.CutiActivity;
@@ -27,6 +28,7 @@ import com.waroengweb.absensi.app.AppController;
 import com.waroengweb.absensi.app.VolleyMultipartRequest;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Ijin;
+import com.waroengweb.absensi.database.entity.Pesan;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +36,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -206,5 +211,51 @@ public class UploadData {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         return stream.toByteArray();
+    }
+
+    public void getIjinCutiNotAcc() {
+        String url = "https://siap.kerincikab.go.id/";
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url+"api/get_ijin_acc",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // response
+                        Log.d("Response", response);
+                        try {
+                            JSONObject json = new JSONObject(response);
+                            if (json.getString("result").equals("success")) {
+                                JSONArray rows = json.getJSONArray("rows");
+                                if (rows.length() > 0){
+                                    for(int id=0;id<rows.length();id++){
+                                        JSONObject row = rows.getJSONObject(id);
+
+
+
+                                    }
+                                }
+                            }
+                        } catch(JSONException e){
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> paramsPost = new HashMap<String, String>();
+                List<Integer> idPesans = db.IjinDao().getAllIdIjin();
+                Gson gson = new Gson();
+                paramsPost.put("id",gson.toJson(idPesans));
+                return paramsPost;
+            }
+        };
+        AppController.getInstance().addToRequestQueue(postRequest);
     }
 }
