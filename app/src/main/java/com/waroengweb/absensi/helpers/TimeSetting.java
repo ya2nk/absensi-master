@@ -26,7 +26,7 @@ public class TimeSetting {
         }
     }
 
-    private boolean isTimeZoneAutomatic() {
+    public boolean isTimeZoneAutomatic() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             return Settings.Global.getInt(mcontext.getContentResolver(), Settings.Global.AUTO_TIME_ZONE, 0) == 1;
         } else {

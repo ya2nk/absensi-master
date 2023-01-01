@@ -173,7 +173,8 @@
             <RadioButton android:id="@+id/pagi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Pagi" />
+                android:text="Pagi"
+                android:checked="true"/>
             <RadioButton android:id="@+id/sore"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

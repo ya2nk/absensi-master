@@ -94,6 +94,7 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 3000;
     private LocationRequest locationRequest;
     private static final long UPDATE_INTERVAL = 2000, FASTEST_INTERVAL = 2000; // = 5 seconds
+    private Handler handler;
 
 
     private AwesomeValidation validation;
@@ -165,7 +166,8 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
             }
         });
 
-
+        handler = new Handler();
+        handler.post(runnableCode);
     }
 		
 		@Override
@@ -563,5 +565,19 @@ public class Presensi extends AppCompatActivity implements GoogleApiClient.Conne
         return ascString;
     }
 
-    
+    private Runnable runnableCode = new Runnable() {
+        @Override
+        public void run() {
+            // Do something here on the main thread
+            timeSetting.checkDateAndTimezoneSetting(Presensi.this);
+            // Repeat this the same runnable code block again another 2 seconds
+            // 'this' is referencing the Runnable object
+            if (timeSetting.isTimeAutomatic()) {
+                handler.postDelayed(this, 3000);
+            } else if (timeSetting.isTimeZoneAutomatic()) {
+                handler.postDelayed(this, 3000);
+            }
+
+        }
+    };
 }
