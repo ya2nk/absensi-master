@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.waroengweb.absensi.app.NetworkHelper;
 import com.waroengweb.absensi.helpers.Session;
 
-public class NilaiActivity extends AppCompatActivity {
+public class NilaiActivity extends BaseActivity {
 
     private WebView webView;
     @Override

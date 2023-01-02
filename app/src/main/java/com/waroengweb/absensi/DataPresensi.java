@@ -60,7 +60,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DataPresensi extends AppCompatActivity {
+public class DataPresensi extends BaseActivity {
 
     RecyclerView recyclerView;
     AbsenAdapter mAdapter;

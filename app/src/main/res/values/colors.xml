@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#00ceb4</color>
     <color name="colorAccent">#D81B60</color>
     <color name="cardColor">#ffffff</color>
-    <color name="textcardColor">#3f3f3f</color>
+    <color name="textcardColor">#FFFFFF</color>
 	<color name="app_button_blue">@color/app_color_sky_blue</color>
     <color name="light_grey_semi_transparent">#80313435</color>
 	<color name="wild_strawberry">#FF4081</color>

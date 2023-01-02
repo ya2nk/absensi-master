@@ -32,6 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -177,13 +180,16 @@ public class UploadDataDinas {
                 for (Dinas dinas : listDinas){
                     long imagename = System.currentTimeMillis();
 
+                    try {
+                        if (dinas.getFoto() != null) {
+                            params.put("photo[" + dinas.getId() + "]", new DataPart("PIC_1_" + String.valueOf(imagename) + ".jpg", readFile(new File(dinas.getFoto()))));
+                        }
 
-                    if (dinas.getFoto() != null){
-                        params.put("photo["+dinas.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",convertImageToBytes(dinas.getFoto())));
-                    }
-
-                    if (dinas.getFotoBerkas() != null){
-                        params.put("photo_berkas["+dinas.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(dinas.getFotoBerkas())));
+                        if (dinas.getFotoBerkas() != null) {
+                            params.put("photo_berkas[" + dinas.getId() + "]", new DataPart("PIC_2_" + String.valueOf(imagename) + ".jpg", readFile(new File(dinas.getFotoBerkas()))));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
 
 
@@ -207,5 +213,23 @@ public class UploadDataDinas {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         return stream.toByteArray();
+    }
+
+    public static byte[] readFile(File file) throws IOException {
+        // Open file
+        RandomAccessFile f = new RandomAccessFile(file, "r");
+        try {
+            // Get and check length
+            long longlength = f.length();
+            int length = (int) longlength;
+            if (length != longlength)
+                throw new IOException("File size >= 2 GB");
+            // Read file and return data
+            byte[] data = new byte[length];
+            f.readFully(data);
+            return data;
+        } finally {
+            f.close();
+        }
     }
 }

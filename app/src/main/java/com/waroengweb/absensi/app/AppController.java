@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.waroengweb.absensi.helpers.TimeSetting;
 
 
 /**
@@ -19,13 +20,13 @@ public class AppController extends Application {
 
     private RequestQueue mRequestQueue;
 
-
     private static AppController mInstance;
 
     @Override
     public void onCreate() {
         super.onCreate();
         mInstance = this;
+
 
     }
 

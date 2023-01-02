@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class CutiActivity extends AppCompatActivity {
+public class CutiActivity extends BaseActivity {
 
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;

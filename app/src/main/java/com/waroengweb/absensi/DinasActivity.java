@@ -31,7 +31,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class DinasActivity extends AppCompatActivity {
+public class DinasActivity extends BaseActivity {
 
     RecyclerView recyclerView;
     DinasAdapter mAdapter;
@@ -44,7 +44,7 @@ public class DinasActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dinas);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("DINAS DALAM & LUAR KOTA");
+        toolbar.setTitle("DINAS DALAM & LUAR DAERAH");
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);

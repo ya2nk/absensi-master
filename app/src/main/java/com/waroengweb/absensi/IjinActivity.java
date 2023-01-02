@@ -17,7 +17,7 @@ import com.waroengweb.absensi.helpers.TimeSetting;
 import com.waroengweb.absensi.helpers.UploadData;
 import com.waroengweb.absensi.ui.main.SectionsPagerAdapter;
 
-public class IjinActivity extends AppCompatActivity {
+public class IjinActivity extends BaseActivity {
 
     TimeSetting timeSetting;
     private FragmentRefreshListener fragmentRefreshListener;

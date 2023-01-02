@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     GridLayout mainGrid;
     private String[] permissionRequest;

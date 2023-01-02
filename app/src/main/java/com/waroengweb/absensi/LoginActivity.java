@@ -25,7 +25,7 @@ import com.waroengweb.absensi.helpers.Session;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
     AwesomeValidation awesomeValidation;
     EditText username,password;
     Button buttonLogin;

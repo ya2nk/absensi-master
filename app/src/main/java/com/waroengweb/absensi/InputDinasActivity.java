@@ -34,6 +34,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Dinas;
+import com.waroengweb.absensi.helpers.ExifHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,7 +49,7 @@ import static com.basgeekball.awesomevalidation.ValidationStyle.TEXT_INPUT_LAYOU
 
 import id.zelory.compressor.Compressor;
 
-public class InputDinasActivity extends AppCompatActivity {
+public class InputDinasActivity extends BaseActivity {
 
     Calendar myCalendar;
     int editTextSelect = 0;
@@ -247,6 +248,11 @@ public class InputDinasActivity extends AppCompatActivity {
                 imagePhoto.setImageURI(Uri.parse(fileString));
                 imagePhoto.requestFocus();
                 takePicture.setText("Ganti Photo");
+                try {
+                    ExifHelper.copyExif(filePhoto.getPath(), fileString);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }  else if (requestCode == 202) {
                 File imageFile = new File(getRealPathFromURI(data.getData()));
                 fileString = compressImage(Uri.fromFile(imageFile)).toString();
@@ -257,6 +263,11 @@ public class InputDinasActivity extends AppCompatActivity {
                 imagePhoto2.setImageURI(Uri.parse(fileString2));
                 imagePhoto2.requestFocus();
                 takePicture2.setText("Ganti Photo");
+                try {
+                    ExifHelper.copyExif(filePhoto2.getPath(), fileString2);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }  else if (requestCode == 204) {
                 File imageFile = new File(getRealPathFromURI(data.getData()));
                 fileString2 = compressImage(Uri.fromFile(imageFile)).toString();

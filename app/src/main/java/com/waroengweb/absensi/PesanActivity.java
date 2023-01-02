@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-public class PesanActivity extends AppCompatActivity implements PesanAdapter.MessageAdapterListener {
+public class PesanActivity extends BaseActivity implements PesanAdapter.MessageAdapterListener {
     private List<Pesan> messages = new ArrayList<>();
     private RecyclerView recyclerView;
     private PesanAdapter mAdapter;
