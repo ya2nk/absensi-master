@@ -59,7 +59,7 @@ public class InputCutiActivity extends AppCompatActivity {
     Uri filePhoto,filePhoto2;
     String fileString,fileString2;
     AppDatabase db;
-    AutoCompleteTextView nip;
+    AutoCompleteTextView nip,editTextFilledExposedDropdown;
     private AwesomeValidation validation;
 
     @Override
@@ -127,6 +127,18 @@ public class InputCutiActivity extends AppCompatActivity {
         validation.addValidation(this,R.id.nip_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
         validation.addValidation(this,R.id.tanggal_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
         validation.addValidation(this,R.id.tanggal_lbl2, RegexTemplate.NOT_EMPTY,R.string.required);
+
+        String[] type = new String[] {"CUTI TAHUNAN", "CUTI SAKIT", "CUTI BESAR", "CUTI ALASAN PENTING","CUTI DILUAR TANGGUNGAN NEGARA","CUTI MELAHIRKAN"};
+
+        ArrayAdapter<String> adapter2 =
+                new ArrayAdapter<>(
+                        this,
+                        android.R.layout.simple_dropdown_item_1line,
+                        type);
+
+        editTextFilledExposedDropdown =
+                findViewById(R.id.filled_exposed_dropdown);
+        editTextFilledExposedDropdown.setAdapter(adapter2);
 
     }
 
@@ -340,6 +352,7 @@ public class InputCutiActivity extends AppCompatActivity {
             cuti.setKeterangan(fileString2);
             cuti.setLamaHari(1);
             cuti.setJenisIjin("Cuti");
+            cuti.setTypeIjin(editTextFilledExposedDropdown.getText().toString());
 
 
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");

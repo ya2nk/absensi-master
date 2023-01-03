@@ -98,7 +98,7 @@
             android:name=".InputCutiActivity"
             android:exported="false"
             android:label="@string/title_activity_input_cuti"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeMaterial"/>
         <activity
             android:name=".CutiActivity"
             android:exported="false"

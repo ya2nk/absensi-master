@@ -1,6 +1,7 @@
 package com.waroengweb.absensi.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -38,12 +39,13 @@ public class IjinAdapter extends RecyclerView.Adapter<IjinAdapter.MyViewHolder> 
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nip,tanggal,status,approved;
+        TextView nip,tanggal,status,approved,ket;
         ImageView userImg,delBtn;
         public MyViewHolder(View view){
             super(view);
             nip = (TextView)view.findViewById(R.id.nipText);
             tanggal = (TextView)view.findViewById(R.id.tanggalText);
+            ket = (TextView)view.findViewById(R.id.keteranganText);
             userImg = (ImageView)view.findViewById(R.id.userImg);
             status = (TextView)view.findViewById(R.id.statusText);
             approved = (TextView)view.findViewById(R.id.approveText);
@@ -62,7 +64,7 @@ public class IjinAdapter extends RecyclerView.Adapter<IjinAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //holder.mImage.setImageResource(listdata.get(position).getThubnail());
         Date tanggalDb = ijinList.get(position).getTanggal();
         String tanggal = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(tanggalDb);
@@ -72,6 +74,7 @@ public class IjinAdapter extends RecyclerView.Adapter<IjinAdapter.MyViewHolder> 
 
         holder.nip.setText(ijinList.get(position).getNip());
         holder.tanggal.setText("("+tanggal+") - ("+tanggal2+") ("+ijinList.get(position).getJenisIjin()+")");
+        holder.ket.setText(ijinList.get(position).getTypeIjin());
 
         final RecyclerView.ViewHolder x=holder;
         Glide.with(context)

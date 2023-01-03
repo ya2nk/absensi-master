@@ -26,7 +26,9 @@
             android:layout_width="match_parent"
             android:layout_height="20dp"
             android:id="@+id/linearTop"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
         </LinearLayout>
         <RelativeLayout
@@ -112,7 +114,8 @@
                 android:id="@+id/tanggal_lbl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText
                     android:id="@+id/tanggal"
                     android:layout_width="match_parent"
@@ -126,7 +129,8 @@
                 android:id="@+id/tanggal_lbl2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <EditText
                     android:id="@+id/tanggal2"
                     android:layout_width="match_parent"
@@ -135,6 +139,23 @@
                     android:inputType="none"
                     android:focusable="false"/>
             </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Jenis Cuti"
+                android:orientation="horizontal"
+                android:layout_marginBottom="15dp">
+                <AutoCompleteTextView
+                    android:id="@+id/filled_exposed_dropdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:focusable="false"/>
+
+            </com.google.android.material.textfield.TextInputLayout>
+
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
