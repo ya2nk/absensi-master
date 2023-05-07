@@ -145,9 +145,7 @@ public class InputCutiActivity extends AppCompatActivity {
     private void takePicture()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED ) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
             Intent i;
@@ -242,7 +240,7 @@ public class InputCutiActivity extends AppCompatActivity {
                 if (tglNumber == 0){
 
                     calendar.setTime(new Date());
-                    if (month < calendar.get(Calendar.MONTH)) {
+                    if (month != calendar.get(Calendar.MONTH)) {
                         Toast.makeText(InputCutiActivity.this,"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
                         return;
                     }

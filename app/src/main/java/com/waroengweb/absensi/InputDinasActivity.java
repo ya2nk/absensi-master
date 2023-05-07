@@ -55,7 +55,7 @@ public class InputDinasActivity extends BaseActivity {
     int editTextSelect = 0;
     Button takePicture,saveData,takePicture2;
     Uri filePhoto,filePhoto2;
-    String fileString,fileString2,typeText="Pagi",jenisText="dalam_kota";
+    String fileString,fileString2,typeText="Sore",jenisText="dalam_kota";
     ImageView imagePhoto,imagePhoto2;
     AutoCompleteTextView nip;
     AppDatabase db;
@@ -117,6 +117,7 @@ public class InputDinasActivity extends BaseActivity {
         validation.addValidation(this,R.id.tanggal_lbl2, RegexTemplate.NOT_EMPTY,R.string.required);
 
         typeDinas = (RadioGroup)findViewById(R.id.type);
+        typeDinas.setVisibility(View.GONE);
         typeDinas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -139,11 +140,11 @@ public class InputDinasActivity extends BaseActivity {
                 switch(checkedId) {
                     case R.id.dalam_dinas:
                         jenisText = "dalam_dinas";
-                        typeDinas.setVisibility(View.VISIBLE);
+                        //typeDinas.setVisibility(View.VISIBLE);
                         break;
                     case R.id.luar_dinas:
                         jenisText = "luar_dinas";
-                        typeDinas.setVisibility(View.GONE);
+                        //typeDinas.setVisibility(View.GONE);
                         break;
 
                 }

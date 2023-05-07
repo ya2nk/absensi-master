@@ -71,7 +71,7 @@ public class UploadDataDinas {
 
 
 
-        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+"api/save_dinas",
+        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+"api/save_dinas_new",
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
