@@ -14,7 +14,6 @@
         android:padding="10dp"
         android:layout_margin="5dp"
         android:id="@+id/filter2"
-        android:layout_below="@+id/bar_toolbar"
         android:background="@drawable/shape">
         <TextView
             android:layout_width="match_parent"

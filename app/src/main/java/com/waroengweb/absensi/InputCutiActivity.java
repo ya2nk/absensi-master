@@ -237,13 +237,13 @@ public class InputCutiActivity extends AppCompatActivity {
                 String formatTanggal = "dd-MM-yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
                 Calendar calendar = Calendar.getInstance();
-                if (tglNumber == 0){
+                calendar.setTime(new Date());
+                if (month != calendar.get(Calendar.MONTH)) {
+                    Toast.makeText(InputCutiActivity.this,"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-                    calendar.setTime(new Date());
-                    if (month != calendar.get(Calendar.MONTH)) {
-                        Toast.makeText(InputCutiActivity.this,"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+                if (tglNumber == 0){
                     tglText.setText(sdf.format(myCalendar.getTime()));
                 } else {
                     try {

@@ -85,15 +85,17 @@
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:exported="false" />
+            android:exported="false"
+            />
         <activity
             android:name=".InputDinasActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppThemeMaterial"/>
         <activity
             android:name=".DinasActivity"
             android:exported="false"
             android:label="@string/title_activity_dinas"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeMaterial" />
         <activity
             android:name=".InputCutiActivity"
             android:exported="false"
@@ -108,7 +110,7 @@
             android:name=".IjinActivity"
             android:exported="false"
             android:label="@string/title_activity_ijin"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppThemeMaterial" />
         <activity
             android:name=".BasicActivity"
             android:label="@string/title_activity_basic"

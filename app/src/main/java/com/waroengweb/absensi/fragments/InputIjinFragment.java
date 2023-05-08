@@ -3,6 +3,7 @@ package com.waroengweb.absensi.fragments;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -32,7 +34,9 @@ import androidx.room.Room;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.google.android.material.textfield.TextInputLayout;
 import com.tapadoo.alerter.Alerter;
+import com.waroengweb.absensi.InputCutiActivity;
 import com.waroengweb.absensi.R;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Ijin;
@@ -42,6 +46,7 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,7 +61,7 @@ import id.zelory.compressor.Compressor;
  */
 public class InputIjinFragment extends Fragment {
 
-    TextView txtTgl;
+    TextInputLayout txtTgl;
     RadioGroup jenisGroup;
     Button takePicture,saveData,takePicture2;
     ImageView imagePhoto,imagePhoto2;
@@ -65,6 +70,8 @@ public class InputIjinFragment extends Fragment {
     AppDatabase db;
     AutoCompleteTextView nip;
     private AwesomeValidation validation;
+    Calendar myCalendar;
+    DatePickerDialog datePicker;
 
     public InputIjinFragment() {
         // Required empty public constructor
@@ -81,12 +88,23 @@ public class InputIjinFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_input_ijin, container, false);
 
+        myCalendar = Calendar.getInstance();
+
         imagePhoto = (ImageView)v.findViewById(R.id.preview);
         imagePhoto2 = (ImageView)v.findViewById(R.id.preview2);
 
-        txtTgl = (TextView)v.findViewById(R.id.tgl_txt);
-        String tanggal = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
-        txtTgl.setText(tanggal);
+        txtTgl = (TextInputLayout) v.findViewById(R.id.tanggal_lbl);
+
+        txtTgl.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (jenisText == "Izin") {
+                    setDatePicker(0);
+                } else {
+                    setDatePicker(3);
+                }
+            }
+        });
 
         jenisGroup = (RadioGroup)v.findViewById(R.id.jenis_group);
         jenisGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -95,9 +113,11 @@ public class InputIjinFragment extends Fragment {
                 switch(checkedId) {
                     case R.id.ijin:
                         jenisText = "Izin";
+
                         break;
                     case R.id.sakit:
                         jenisText = "Sakit";
+
                         break;
                 }
             }
@@ -153,9 +173,7 @@ public class InputIjinFragment extends Fragment {
     public void takePicture()
     {
         if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
-                        PackageManager.PERMISSION_GRANTED) {
+                PackageManager.PERMISSION_GRANTED) {
             StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
             StrictMode.setVmPolicy(builder.build());
             Intent i;
@@ -355,6 +373,35 @@ public class InputIjinFragment extends Fragment {
 
     }
 
+    private void setDatePicker(int number)
+    {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+                String formatTanggal = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
+                Calendar calendar = Calendar.getInstance();
+
+
+                    calendar.setTime(new Date());
+                    if (month != calendar.get(Calendar.MONTH)) {
+                        Toast.makeText(getActivity(),"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    txtTgl.getEditText().setText(sdf.format(myCalendar.getTime()));
+
+
+            }
+        }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)-number);
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
+        datePickerDialog.show();
+    }
 
 }

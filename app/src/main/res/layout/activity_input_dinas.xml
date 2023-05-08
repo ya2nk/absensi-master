@@ -34,29 +34,10 @@
         android:orientation="horizontal"
         android:id="@+id/relativeTop">
 
-        <ImageView
-            android:id="@+id/preview"
-            android:layout_width="140dp"
-            android:layout_height="180dp"
 
-            android:adjustViewBounds="true"
-            android:background="@drawable/image_border"
-            android:padding="5dp"
-            android:scaleType="fitXY"
-            android:src="@drawable/index" />
-
-        <Button
-            android:id="@+id/take_picture"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="60dp"
-            android:background="@drawable/button_transparan"
-            android:text="Ambil Photo"
-            android:textColor="#090909" />
 
         <ImageView
+            android:layout_centerInParent="true"
             android:id="@+id/preview2"
             android:layout_width="140dp"
             android:layout_height="180dp"
@@ -73,10 +54,11 @@
             android:layout_height="60dp"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="185dp"
-            android:background="@drawable/button_transparan"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_centerInParent="true"
             android:text="SPT"
             android:textAlignment="center"
-            android:textColor="#090909"
+            android:textColor="#F44336"
             android:textSize="11dp"/>
 
     </RelativeLayout>
@@ -131,27 +113,24 @@
                 android:hint="Nomor Induk Pegawai"
                 android:inputType="number"
                 android:imeOptions="actionDone"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tgl_lbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tanggal"
-            android:layout_marginTop="5dp"
-            android:textSize="16dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#636262"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="16dp"
-            android:id="@+id/tgl_txt"
-            android:textColor="#2196F3"/>
+            android:layout_marginBottom="15dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <EditText
+                android:id="@+id/tanggal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tanggal Awal"
+                android:inputType="none"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <TextView
             android:layout_width="match_parent"

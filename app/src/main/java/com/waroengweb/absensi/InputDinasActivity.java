@@ -2,6 +2,7 @@ package com.waroengweb.absensi;
 
 import android.app.AlertDialog;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -18,12 +19,13 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.TextView;
+
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
@@ -38,8 +40,7 @@ import com.waroengweb.absensi.helpers.ExifHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.ParseException;
+
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -55,13 +56,14 @@ public class InputDinasActivity extends BaseActivity {
     int editTextSelect = 0;
     Button takePicture,saveData,takePicture2;
     Uri filePhoto,filePhoto2;
-    String fileString,fileString2,typeText="Sore",jenisText="dalam_kota";
+    String fileString,fileString2,typeText="Sore",jenisText="dalam_dinas";
     ImageView imagePhoto,imagePhoto2;
     AutoCompleteTextView nip;
     AppDatabase db;
     private AwesomeValidation validation;
     RadioGroup typeDinas;
     RadioGroup jenisDinas;
+    TextInputLayout txtTgl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,17 +72,27 @@ public class InputDinasActivity extends BaseActivity {
 
         myCalendar = Calendar.getInstance();
 
-        String timeStamp = new SimpleDateFormat("dd-MM-yyyy").format(new Date());
-        TextView txtTgl = (TextView) findViewById(R.id.tgl_txt);
-        txtTgl.setText(timeStamp);
 
-        takePicture = (Button)findViewById(R.id.take_picture);
+        txtTgl = (TextInputLayout) findViewById(R.id.tgl_lbl);
+        txtTgl.getEditText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (jenisText == "dalam_dinas") {
+                    setDatePicker(0);
+                } else {
+                    setDatePicker(3);
+                }
+            }
+        });
+
+
+        /* takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePicture();
             }
-        });
+        }); */
 
         takePicture2 = (Button)findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +110,7 @@ public class InputDinasActivity extends BaseActivity {
             }
         });
 
-        imagePhoto = (ImageView)findViewById(R.id.preview);
+        //imagePhoto = (ImageView)findViewById(R.id.preview);
         imagePhoto2 = (ImageView)findViewById(R.id.preview2);
 
         db = Room.databaseBuilder(this,
@@ -349,5 +361,36 @@ public class InputDinasActivity extends BaseActivity {
         takePicture2.setText("Photo/Gambar");
         imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
         imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+    }
+
+    private void setDatePicker(int number)
+    {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(InputDinasActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                String formatTanggal = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
+                Calendar calendar = Calendar.getInstance();
+
+
+                calendar.setTime(new Date());
+                if (month != calendar.get(Calendar.MONTH)) {
+                    Toast.makeText(InputDinasActivity.this,"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                txtTgl.getEditText().setText(sdf.format(myCalendar.getTime()));
+
+
+            }
+        }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)-number);
+        datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
+        datePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
+        datePickerDialog.show();
     }
 }

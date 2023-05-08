@@ -55,9 +55,11 @@
             android:layout_height="60dp"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="10dp"
-            android:background="@drawable/button_transparan"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:text="Ambil Photo"
-            android:textColor="#0A7FDB" />
+            android:textColor="@color/crimson"
+            android:textSize="11dp"
+            app:strokeColor="@color/crimson"/>
 
         <ImageView
             android:id="@+id/preview2"
@@ -76,10 +78,11 @@
             android:layout_height="60dp"
             android:layout_marginTop="60dp"
             android:layout_marginLeft="175dp"
-            android:background="@drawable/button_transparan"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:text="Photo/Gambar"
-            android:textColor="#00BCD4"
-            android:textSize="11dp"/>
+            android:textColor="@color/crimson"
+            android:textSize="9dp"
+            app:strokeColor="@color/crimson"/>
 
     </RelativeLayout>
     <LinearLayout
@@ -91,6 +94,7 @@
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
         android:id="@+id/linearMiddle">
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/nip_lbl"
             android:layout_width="match_parent"
@@ -103,27 +107,10 @@
                 android:hint="Nomor Induk Pegawai"
                 android:inputType="number"
                 android:imeOptions="actionDone"
-                android:singleLine="true"/>
+                android:singleLine="true"
+                style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tanggal"
-            android:layout_marginTop="5dp"
-            android:textSize="16dp"/>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#636262"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:textSize="16dp"
-            android:id="@+id/tgl_txt"
-            android:textColor="#2196F3"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,6 +136,22 @@
                 android:layout_height="wrap_content"
                 android:text="Sakit" />
         </RadioGroup>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tanggal_lbl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <EditText
+                android:id="@+id/tanggal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tanggal Awal"
+                android:inputType="none"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
 
         <Button
             android:layout_width="match_parent"

@@ -58,9 +58,10 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="60dp"
                 android:layout_marginLeft="10dp"
-                android:background="@drawable/button_transparan"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:text="Ambil Photo"
-                android:textColor="#0A7FDB" />
+                android:textColor="#F44336"
+                android:textSize="11dp"/>
 
             <ImageView
                 android:id="@+id/preview2"
@@ -79,10 +80,10 @@
                 android:layout_height="60dp"
                 android:layout_marginTop="60dp"
                 android:layout_marginLeft="175dp"
-                android:background="@drawable/button_transparan"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:text="Photo/Gambar"
-                android:textColor="#00BCD4"
-                android:textSize="11dp"/>
+                android:textColor="#F44336"
+                android:textSize="9dp"/>
 
         </RelativeLayout>
         <LinearLayout
@@ -106,7 +107,8 @@
                     android:hint="Nomor Induk Pegawai"
                     android:inputType="number"
                     android:imeOptions="actionDone"
-                    android:singleLine="true"/>
+                    android:singleLine="true"
+                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.FilledBox"/>
             </com.google.android.material.textfield.TextInputLayout>
 
 
