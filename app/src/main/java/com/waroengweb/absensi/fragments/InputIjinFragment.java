@@ -107,6 +107,7 @@ public class InputIjinFragment extends Fragment {
         });
 
         jenisGroup = (RadioGroup)v.findViewById(R.id.jenis_group);
+
         jenisGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
@@ -120,6 +121,7 @@ public class InputIjinFragment extends Fragment {
 
                         break;
                 }
+                txtTgl.getEditText().getText().clear();
             }
         });
 
@@ -168,6 +170,7 @@ public class InputIjinFragment extends Fragment {
         validation = new AwesomeValidation(TEXT_INPUT_LAYOUT);
         AwesomeValidation.disableAutoFocusOnFirstFailure();
         validation.addValidation(getActivity(),R.id.nip_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
+        validation.addValidation(getActivity(),R.id.tanggal_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
     }
 
     public void takePicture()
@@ -332,6 +335,11 @@ public class InputIjinFragment extends Fragment {
                 return;
             }
 
+            if (txtTgl.getEditText().getText().equals("")) {
+                Alerter.create(getActivity()).setTitle("ERROR").setText("TANGGAL BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
+                return;
+            }
+
             Ijin ijin = new Ijin();
             ijin.setNip(nip.getText().toString());
             ijin.setApproved(0);
@@ -342,11 +350,11 @@ public class InputIjinFragment extends Fragment {
             ijin.setTypeIjin(typeText);
             ijin.setLamaHari(1);
 
-            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             Date tanggalNew;
-            String tanggal = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+
             try {
-                tanggalNew = formatter.parse(tanggal);
+                tanggalNew = formatter.parse(txtTgl.getEditText().getText().toString());
                 ijin.setTanggal(tanggalNew);
                 ijin.setTanggal2(tanggalNew);
                 ijin.setTanggalInput(new Date());
@@ -401,6 +409,7 @@ public class InputIjinFragment extends Fragment {
         calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)-number);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
+        datePickerDialog.updateDate(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 

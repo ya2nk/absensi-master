@@ -41,6 +41,8 @@ import com.waroengweb.absensi.helpers.ExifHelper;
 import java.io.File;
 import java.io.IOException;
 
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,10 +56,10 @@ public class InputDinasActivity extends BaseActivity {
 
     Calendar myCalendar;
     int editTextSelect = 0;
-    Button takePicture,saveData,takePicture2;
-    Uri filePhoto,filePhoto2;
-    String fileString,fileString2,typeText="Sore",jenisText="dalam_dinas";
-    ImageView imagePhoto,imagePhoto2;
+    Button saveData,takePicture2;
+    Uri filePhoto2;
+    String fileString2,typeText="Sore",jenisText="dalam_dinas";
+    ImageView imagePhoto2;
     AutoCompleteTextView nip;
     AppDatabase db;
     private AwesomeValidation validation;
@@ -125,25 +127,10 @@ public class InputDinasActivity extends BaseActivity {
         validation = new AwesomeValidation(TEXT_INPUT_LAYOUT);
         AwesomeValidation.disableAutoFocusOnFirstFailure();
         validation.addValidation(this,R.id.nip_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
-        validation.addValidation(this,R.id.tanggal_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
-        validation.addValidation(this,R.id.tanggal_lbl2, RegexTemplate.NOT_EMPTY,R.string.required);
+        validation.addValidation(this,R.id.tgl_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
 
-        typeDinas = (RadioGroup)findViewById(R.id.type);
-        typeDinas.setVisibility(View.GONE);
-        typeDinas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                switch(checkedId) {
-                    case R.id.pagi:
-                        typeText = "Pagi";
-                        break;
-                    case R.id.sore:
-                        typeText = "Sore";
-                        break;
 
-                }
-            }
-        });
+
 
         jenisDinas = (RadioGroup)findViewById(R.id.jenis);
         jenisDinas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -153,6 +140,7 @@ public class InputDinasActivity extends BaseActivity {
                     case R.id.dalam_dinas:
                         jenisText = "dalam_dinas";
                         //typeDinas.setVisibility(View.VISIBLE);
+
                         break;
                     case R.id.luar_dinas:
                         jenisText = "luar_dinas";
@@ -160,38 +148,12 @@ public class InputDinasActivity extends BaseActivity {
                         break;
 
                 }
+                txtTgl.getEditText().getText().clear();
             }
         });
     }
 
-    public void takePicture()
-    {
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-        Intent i;
-        i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File pictureFile = null;
-        try {
-            pictureFile = getOutputMediaFile();
-        } catch (IOException ex) {
-            Toast.makeText(InputDinasActivity.this,
-                    "Photo file can't be created, please try again",
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-        filePhoto = Uri.fromFile(pictureFile);
-        Uri photoUri = FileProvider.getUriForFile(InputDinasActivity.this,
-                "com.waroengweb.absensi.provider",pictureFile
-        );
-        i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-            i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-        } else {
-            i.putExtra("android.intent.extras.CAMERA_FACING", 1);
-        }
-        i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-        startActivityForResult(i,201);
-    }
+
 
     public void takePicture2()
     {
@@ -257,20 +219,10 @@ public class InputDinasActivity extends BaseActivity {
         super.onActivityResult(requestCode,resultCode,data);
         if(resultCode == RESULT_OK){
             if (requestCode == 201){
-                fileString = compressImage(filePhoto).toString();
-                imagePhoto.setImageURI(Uri.parse(fileString));
-                imagePhoto.requestFocus();
-                takePicture.setText("Ganti Photo");
-                try {
-                    ExifHelper.copyExif(filePhoto.getPath(), fileString);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             }  else if (requestCode == 202) {
-                File imageFile = new File(getRealPathFromURI(data.getData()));
-                fileString = compressImage(Uri.fromFile(imageFile)).toString();
-                imagePhoto.setImageURI(Uri.parse(fileString));
-                takePicture.setText("Ganti Photo");
+
+
             } else if (requestCode == 203){
                 fileString2 = compressImage(filePhoto2).toString();
                 imagePhoto2.setImageURI(Uri.parse(fileString2));
@@ -327,8 +279,13 @@ public class InputDinasActivity extends BaseActivity {
                 return;
             }
 
-            if (fileString == null) {
-                Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO..").setBackgroundColorInt(Color.RED).show();
+            if (fileString2 == null) {
+                Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO BERKAS").setBackgroundColorInt(Color.RED).show();
+                return;
+            }
+
+            if (txtTgl.getEditText().getText().equals("")) {
+                Alerter.create(this).setTitle("ERROR").setText("TANGGAL BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
                 return;
             }
 
@@ -336,13 +293,22 @@ public class InputDinasActivity extends BaseActivity {
             dinas.setNip(nip.getText().toString());
             dinas.setApproved(0);
             dinas.setUploaded(0);
-            dinas.setFoto(fileString);
+
             dinas.setFotoBerkas(fileString2);
             dinas.setTypeDinas(typeText);
-            dinas.setTanggal(new Date());
-            dinas.setTanggal2(new Date());
+
             dinas.setJenisDinas(jenisText);
 
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date tanggalNew;
+
+            try {
+                tanggalNew = formatter.parse(txtTgl.getEditText().getText().toString());
+                dinas.setTanggal(tanggalNew);
+                dinas.setTanggal2(tanggalNew);
+            } catch (ParseException pe) {
+                pe.printStackTrace();
+            }
 
             db.DinasDao().insertDinas(dinas);
             Toast.makeText(this, "DATA BERHASIL DISIMPAN", Toast.LENGTH_SHORT).show();
@@ -355,11 +321,11 @@ public class InputDinasActivity extends BaseActivity {
     {
         nip.setText("");
 
-        fileString = null;
+
         fileString2 = null;
-        takePicture.setText("Photo/Gambar");
+
         takePicture2.setText("Photo/Gambar");
-        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
+
         imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
     }
 
@@ -391,6 +357,7 @@ public class InputDinasActivity extends BaseActivity {
         calendar.set(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH)-number);
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
+        datePickerDialog.updateDate(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 }

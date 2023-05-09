@@ -127,6 +127,7 @@ public class InputCutiActivity extends AppCompatActivity {
         validation.addValidation(this,R.id.nip_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
         validation.addValidation(this,R.id.tanggal_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
         validation.addValidation(this,R.id.tanggal_lbl2, RegexTemplate.NOT_EMPTY,R.string.required);
+        validation.addValidation(this,R.id.jenis_cuti_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
 
         String[] type = new String[] {"CUTI TAHUNAN", "CUTI SAKIT", "CUTI BESAR", "CUTI ALASAN PENTING","CUTI DILUAR TANGGUNGAN NEGARA","CUTI MELAHIRKAN"};
 
@@ -339,6 +340,11 @@ public class InputCutiActivity extends AppCompatActivity {
 
             if (fileString2 == null) {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO KETERANGAN").setBackgroundColorInt(Color.RED).show();
+                return;
+            }
+
+            if (editTextFilledExposedDropdown.getText().equals("")) {
+                Alerter.create(this).setTitle("ERROR").setText("JENIS CUTI BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
                 return;
             }
 

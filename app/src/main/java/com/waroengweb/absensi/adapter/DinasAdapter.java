@@ -99,7 +99,7 @@ public class DinasAdapter extends RecyclerView.Adapter<DinasAdapter.MyViewHolder
 
         final RecyclerView.ViewHolder x=holder;
         Glide.with(context)
-                .load(dinasList.get(position).getFoto())
+                .load(dinasList.get(position).getFotoBerkas())
                 .into(holder.userImg);
 
         String statusText = dinasList.get(position).getUploaded() == 1 ? "Sudah Dikirim" : "Belum Dikirim";

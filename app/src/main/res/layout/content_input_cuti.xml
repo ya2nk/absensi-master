@@ -148,7 +148,8 @@
                 android:layout_height="wrap_content"
                 android:hint="Jenis Cuti"
                 android:orientation="horizontal"
-                android:layout_marginBottom="15dp">
+                android:layout_marginBottom="15dp"
+                android:id="@+id/jenis_cuti_lbl">
                 <AutoCompleteTextView
                     android:id="@+id/filled_exposed_dropdown"
                     android:layout_width="match_parent"

@@ -130,7 +130,8 @@
             <RadioButton android:id="@+id/ijin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Izin" />
+                android:text="Izin"
+                android:checked="true"/>
             <RadioButton android:id="@+id/sakit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -147,7 +148,7 @@
                 android:id="@+id/tanggal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tanggal Awal"
+                android:hint="Tanggal"
                 android:inputType="none"
                 android:focusable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -159,6 +160,13 @@
             android:text="SIMPAN"
             style="@style/Widget.AppCompat.Button.Colored"
             android:id="@+id/save_data"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="* Data yang sudah disimpan harus diupload ditanggal yang sama, data tidak bisa diupload kalau sudah beda tanggal"
+            android:layout_marginTop="5dp"
+            android:textSize="12dp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 
