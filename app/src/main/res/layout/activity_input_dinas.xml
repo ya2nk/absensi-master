@@ -127,12 +127,25 @@
                 android:id="@+id/tanggal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Tanggal"
+                android:hint="Tanggal Awal"
                 android:inputType="none"
                 android:focusable="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tgl_lbl2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="15dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <EditText
+                android:id="@+id/tanggal2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tanggal Akhir"
+                android:inputType="none"
+                android:focusable="false"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:layout_width="match_parent"

@@ -65,7 +65,7 @@ public class InputDinasActivity extends BaseActivity {
     private AwesomeValidation validation;
     RadioGroup typeDinas;
     RadioGroup jenisDinas;
-    TextInputLayout txtTgl;
+    TextInputLayout txtTgl,txtTgl2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,14 +87,14 @@ public class InputDinasActivity extends BaseActivity {
             }
         });
 
-
-        /* takePicture = (Button)findViewById(R.id.take_picture);
-        takePicture.setOnClickListener(new View.OnClickListener() {
+        txtTgl2 = (TextInputLayout) findViewById(R.id.tgl_lbl2);
+        txtTgl2.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture();
+                setDatePicker2();
             }
-        }); */
+        });
+        txtTgl2.setVisibility(View.GONE);
 
         takePicture2 = (Button)findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
@@ -112,7 +112,7 @@ public class InputDinasActivity extends BaseActivity {
             }
         });
 
-        //imagePhoto = (ImageView)findViewById(R.id.preview);
+
         imagePhoto2 = (ImageView)findViewById(R.id.preview2);
 
         db = Room.databaseBuilder(this,
@@ -129,9 +129,6 @@ public class InputDinasActivity extends BaseActivity {
         validation.addValidation(this,R.id.nip_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
         validation.addValidation(this,R.id.tgl_lbl, RegexTemplate.NOT_EMPTY,R.string.required);
 
-
-
-
         jenisDinas = (RadioGroup)findViewById(R.id.jenis);
         jenisDinas.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -139,12 +136,11 @@ public class InputDinasActivity extends BaseActivity {
                 switch(checkedId) {
                     case R.id.dalam_dinas:
                         jenisText = "dalam_dinas";
-                        //typeDinas.setVisibility(View.VISIBLE);
-
+                        txtTgl2.setVisibility(View.GONE);
                         break;
                     case R.id.luar_dinas:
                         jenisText = "luar_dinas";
-                        //typeDinas.setVisibility(View.GONE);
+                        txtTgl2.setVisibility(View.VISIBLE);
                         break;
 
                 }
@@ -152,8 +148,6 @@ public class InputDinasActivity extends BaseActivity {
             }
         });
     }
-
-
 
     public void takePicture2()
     {
@@ -221,7 +215,6 @@ public class InputDinasActivity extends BaseActivity {
             if (requestCode == 201){
 
             }  else if (requestCode == 202) {
-
 
             } else if (requestCode == 203){
                 fileString2 = compressImage(filePhoto2).toString();
@@ -293,19 +286,21 @@ public class InputDinasActivity extends BaseActivity {
             dinas.setNip(nip.getText().toString());
             dinas.setApproved(0);
             dinas.setUploaded(0);
-
             dinas.setFotoBerkas(fileString2);
             dinas.setTypeDinas(typeText);
-
             dinas.setJenisDinas(jenisText);
 
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date tanggalNew;
+            Date tanggalNew,tanggalNew2;
 
             try {
                 tanggalNew = formatter.parse(txtTgl.getEditText().getText().toString());
+                tanggalNew2 = tanggalNew;
+                if (jenisText == "luar_dinas") {
+                    tanggalNew2 = formatter.parse(txtTgl2.getEditText().getText().toString());
+                }
                 dinas.setTanggal(tanggalNew);
-                dinas.setTanggal2(tanggalNew);
+                dinas.setTanggal2(tanggalNew2);
             } catch (ParseException pe) {
                 pe.printStackTrace();
             }
@@ -320,13 +315,11 @@ public class InputDinasActivity extends BaseActivity {
     private void clearDinas()
     {
         nip.setText("");
-
-
         fileString2 = null;
-
         takePicture2.setText("Photo/Gambar");
-
         imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        txtTgl.getEditText().getText().clear();
+        txtTgl2.getEditText().getText().clear();
     }
 
     private void setDatePicker(int number)
@@ -341,8 +334,6 @@ public class InputDinasActivity extends BaseActivity {
                 String formatTanggal = "dd-MM-yyyy";
                 SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
                 Calendar calendar = Calendar.getInstance();
-
-
                 calendar.setTime(new Date());
                 if (month != calendar.get(Calendar.MONTH)) {
                     Toast.makeText(InputDinasActivity.this,"Hanya bisa input dibulan yang sama",Toast.LENGTH_SHORT).show();
@@ -358,6 +349,35 @@ public class InputDinasActivity extends BaseActivity {
         datePickerDialog.getDatePicker().setMinDate(calendar.getTimeInMillis());
         datePickerDialog.getDatePicker().setMaxDate(myCalendar.getTimeInMillis());
         datePickerDialog.updateDate(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.show();
+    }
+
+    private void setDatePicker2()
+    {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(InputDinasActivity.this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, month);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
+                String formatTanggal = "dd-MM-yyyy";
+                SimpleDateFormat sdf = new SimpleDateFormat(formatTanggal);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(new Date());
+                try {
+                    Date date1 = sdf.parse(txtTgl.getEditText().getText().toString());
+                    calendar.setTime(date1);
+                    if(calendar.after(myCalendar)) {
+                        Toast.makeText(InputDinasActivity.this,"Tanggal Akhir harus lebih besar dari tanggal awal",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                txtTgl2.getEditText().setText(sdf.format(myCalendar.getTime()));
+            }
+        }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
 }

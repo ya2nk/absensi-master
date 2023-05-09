@@ -378,6 +378,7 @@ public class InputIjinFragment extends Fragment {
         takePicture2.setText("Photo/Gambar");
         imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
         imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        txtTgl.getEditText().getText().clear();
 
     }
 
