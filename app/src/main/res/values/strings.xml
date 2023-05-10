@@ -27,6 +27,6 @@
     <string name="action_delete">Delete</string>
     <string name="err_xxx">Aplikasi tidak bisa digunakan jika pengaturan waktu tidak otomatis!!</string>
     <string name="aaa">api/get-info2</string>
-    <string name="bbb">api/get-info3</string>
+    <string name="bbb">api/get-info4</string>
     <string name="title_name">kerincikab07091983</string>
 </resources>

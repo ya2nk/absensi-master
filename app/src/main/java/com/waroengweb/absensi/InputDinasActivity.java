@@ -276,10 +276,11 @@ public class InputDinasActivity extends BaseActivity {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO BERKAS").setBackgroundColorInt(Color.RED).show();
                 return;
             }
-
-            if (txtTgl.getEditText().getText().equals("")) {
-                Alerter.create(this).setTitle("ERROR").setText("TANGGAL BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
-                return;
+            if (jenisText == "luar_dinas") {
+                if (txtTgl2.getEditText().getText().toString().isEmpty()) {
+                    Alerter.create(this).setTitle("ERROR").setText("TANGGAL AKHIR BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
+                    return;
+                }
             }
 
             Dinas dinas = new Dinas();
