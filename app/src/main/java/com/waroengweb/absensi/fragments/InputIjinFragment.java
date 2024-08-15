@@ -150,7 +150,11 @@ public class InputIjinFragment extends Fragment {
         takePicture2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture2();
+                Intent i = new Intent();
+                i.setType("application/pdf");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+
+                launchSomeActivity.launch(i);
             }
         });
 
