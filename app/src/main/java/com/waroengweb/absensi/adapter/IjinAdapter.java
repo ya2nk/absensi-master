@@ -78,7 +78,7 @@ public class IjinAdapter extends RecyclerView.Adapter<IjinAdapter.MyViewHolder> 
 
         final RecyclerView.ViewHolder x=holder;
         Glide.with(context)
-                .load(ijinList.get(position).getFoto())
+                .load(context.getResources().getIdentifier("pdf", "drawable", context.getPackageName()))
                 .into(holder.userImg);
 
         String statusText = ijinList.get(position).getUploaded() == 1 ? "Sudah Dikirim" : "Belum Dikirim";

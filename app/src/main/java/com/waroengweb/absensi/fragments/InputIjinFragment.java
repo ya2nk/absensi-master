@@ -2,6 +2,7 @@ package com.waroengweb.absensi.fragments;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
@@ -27,6 +28,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
@@ -40,6 +43,7 @@ import com.waroengweb.absensi.InputCutiActivity;
 import com.waroengweb.absensi.R;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Ijin;
+import com.waroengweb.absensi.helpers.UriUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,8 +67,8 @@ public class InputIjinFragment extends Fragment {
 
     TextInputLayout txtTgl;
     RadioGroup jenisGroup;
-    Button takePicture,saveData,takePicture2;
-    ImageView imagePhoto,imagePhoto2;
+    Button saveData,takePicture2;
+    //ImageView imagePhoto,imagePhoto2;
     Uri filePhoto,filePhoto2;
     String fileString,fileString2,typeText="Penuh",jenisText="Izin";
     AppDatabase db;
@@ -72,7 +76,7 @@ public class InputIjinFragment extends Fragment {
     private AwesomeValidation validation;
     Calendar myCalendar;
     DatePickerDialog datePicker;
-
+    TextView txtFile;
     public InputIjinFragment() {
         // Required empty public constructor
     }
@@ -90,9 +94,9 @@ public class InputIjinFragment extends Fragment {
 
         myCalendar = Calendar.getInstance();
 
-        imagePhoto = (ImageView)v.findViewById(R.id.preview);
-        imagePhoto2 = (ImageView)v.findViewById(R.id.preview2);
-
+        //imagePhoto = (ImageView)v.findViewById(R.id.preview);
+        //imagePhoto2 = (ImageView)v.findViewById(R.id.preview2);
+        txtFile = (TextView) v.findViewById(R.id.txt_file);
         txtTgl = (TextInputLayout) v.findViewById(R.id.tanggal_lbl);
 
         txtTgl.getEditText().setOnClickListener(new View.OnClickListener() {
@@ -134,14 +138,14 @@ public class InputIjinFragment extends Fragment {
                 android.R.layout.simple_dropdown_item_1line, NIP);
         nip.setAdapter(adapter);
 
-        takePicture = (Button)v.findViewById(R.id.take_picture);
+        /* takePicture = (Button)v.findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePicture();
             }
         });
-
+        */
         takePicture2 = (Button)v.findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -208,7 +212,7 @@ public class InputIjinFragment extends Fragment {
 
     public void takePicture2()
     {
-        final CharSequence[] options = {"Ambil Photo", "Pilih Dari Galeri", "Batal"};
+        final CharSequence[] options = {"Pilih Dari Galeri", "Batal"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("Silakan Pilih ambil photo atau dari galeri");
@@ -218,36 +222,12 @@ public class InputIjinFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
-                if (options[item].equals("Ambil Photo")) {
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    Intent i;
-                    i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File pictureFile = null;
-                    try {
-                        pictureFile = getOutputMediaFile();
-                    } catch (IOException ex) {
-                        Toast.makeText(getActivity(),
-                                "Photo file can't be created, please try again",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    filePhoto2 = Uri.fromFile(pictureFile);
-                    Uri photoUri = FileProvider.getUriForFile(getActivity(),
-                            "com.waroengweb.absensi.provider",pictureFile
-                    );
-                    i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-                    } else {
-                        i.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                    }
-                    i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-                    startActivityForResult(i,201);
+                 if (options[item].equals("Pilih Dari Galeri")) {
+                    Intent i = new Intent();
+                    i.setType("application/pdf");
+                    i.setAction(Intent.ACTION_GET_CONTENT);
 
-                } else if (options[item].equals("Pilih Dari Galeri")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 202);//one can be replaced with any action code
+                    launchSomeActivity.launch(i);
 
                 } else if (options[item].equals("Batal")) {
                     dialog.dismiss();
@@ -265,30 +245,7 @@ public class InputIjinFragment extends Fragment {
         return mFile;
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if(resultCode == RESULT_OK){
-            if (requestCode == 200){
-                fileString = compressImage(filePhoto).toString();
-                imagePhoto.setImageURI(Uri.parse(fileString));
-                imagePhoto.requestFocus();
-                takePicture.setText("Ganti Photo");
-            } else if (requestCode == 201) {
-                fileString2 = compressImage(filePhoto2).toString();
-                imagePhoto2.setImageURI(Uri.parse(fileString2));
-                imagePhoto2.requestFocus();
-                takePicture2.setText("Ganti Photo");
-            } else {
-                File imageFile = new File(getRealPathFromURI(data.getData()));
-                fileString2 = compressImage(Uri.fromFile(imageFile)).toString();
-                imagePhoto2.setImageURI(Uri.parse(fileString2));
-                takePicture2.setText("Ganti Photo");
-            }
 
-        }
-
-    }
 
     private String getRealPathFromURI(Uri contentURI) {
         String result;
@@ -325,13 +282,13 @@ public class InputIjinFragment extends Fragment {
                 return;
             }
 
-            if (fileString == null) {
+            /* if (fileString == null) {
                 Alerter.create(getActivity()).setTitle("ERROR").setText("BELUM AMBIL PHOTO..").setBackgroundColorInt(Color.RED).show();
                 return;
-            }
+            } */
 
             if (fileString2 == null) {
-                Alerter.create(getActivity()).setTitle("ERROR").setText("BELUM AMBIL PHOTO KETERANGAN").setBackgroundColorInt(Color.RED).show();
+                Alerter.create(getActivity()).setTitle("ERROR").setText("BELUM AMBIL PDF").setBackgroundColorInt(Color.RED).show();
                 return;
             }
 
@@ -374,10 +331,11 @@ public class InputIjinFragment extends Fragment {
         nip.setText("");
         fileString = null;
         fileString2 = null;
-        takePicture.setText("Ambil Photo");
-        takePicture2.setText("Photo/Gambar");
-        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
-        imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        //takePicture.setText("Ambil Photo");
+        //takePicture2.setText("Photo/Gambar");
+        //imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
+        //imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        txtFile.setText("BELUM AMBIL PDF");
         txtTgl.getEditText().getText().clear();
 
     }
@@ -413,5 +371,29 @@ public class InputIjinFragment extends Fragment {
         datePickerDialog.updateDate(myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
+
+    ActivityResultLauncher<Intent> launchSomeActivity
+            = registerForActivityResult(
+            new ActivityResultContracts
+                    .StartActivityForResult(),
+            result -> {
+                if (result.getResultCode()
+                        == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    // do your operation from here....
+                    if (data != null
+                            && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        File pdfFile = null;
+                        try {
+                            pdfFile = UriUtils.getFileFromUri(getActivity().getContentResolver(), selectedImageUri, getActivity().getCacheDir());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        fileString2 =  pdfFile.toString();
+                        txtFile.setText(fileString2);
+                    }
+                }
+            });
 
 }

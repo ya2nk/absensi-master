@@ -31,7 +31,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
         </LinearLayout>
-        <RelativeLayout
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -39,53 +39,31 @@
             app:layout_constraintTop_toBottomOf="@+id/linearTop"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             android:id="@+id/relativeTop">
 
-            <ImageView
-                android:id="@+id/preview"
-                android:layout_width="140dp"
-                android:layout_height="180dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/image_border"
-                android:padding="5dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/index" />
-
-            <Button
-                android:id="@+id/take_picture"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginTop="60dp"
-                android:layout_marginLeft="10dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:text="Ambil Photo"
-                android:textColor="#F44336"
-                android:textSize="11dp"/>
-
-            <ImageView
-                android:id="@+id/preview2"
-                android:layout_width="140dp"
-                android:layout_height="180dp"
-                android:adjustViewBounds="true"
-                android:background="@drawable/image_border"
-                android:padding="5dp"
-                android:scaleType="fitXY"
-                android:src="@drawable/doc"
-                android:layout_marginLeft="160dp"/>
 
             <Button
                 android:id="@+id/take_picture2"
                 android:layout_width="wrap_content"
                 android:layout_height="60dp"
                 android:layout_marginTop="60dp"
-                android:layout_marginLeft="175dp"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:text="Photo/Gambar"
-                android:textColor="#F44336"
-                android:textSize="9dp"/>
+                android:layout_centerInParent="true"
+                android:text="UPLOAD PDF"
+                android:textAlignment="center"
+                android:textColor="#FBFBFB"
+                android:textSize="11dp"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Belum Pilih PDF"
+                android:textColor="#fff"
+                android:id="@+id/txt_file"
+                android:layout_gravity="center" />
 
-        </RelativeLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

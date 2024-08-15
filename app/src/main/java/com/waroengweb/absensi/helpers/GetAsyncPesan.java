@@ -1,5 +1,6 @@
 package com.waroengweb.absensi.helpers;
 
+import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -7,12 +8,14 @@ import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.room.Room;
@@ -178,8 +181,10 @@ public class GetAsyncPesan {
                 intent = new Intent(context, LoginActivity.class);
             }
 
+
+
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT);
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
 
             NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID);
             notificationBuilder.setAutoCancel(true)
@@ -196,7 +201,10 @@ public class GetAsyncPesan {
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(pesan[0].getJudul()))
                     .setContentIntent(pendingIntent);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify(/*notification id*/pesan[0].getId(), notificationBuilder.build());
+            if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                notificationManager.notify(/*notification id*/pesan[0].getId(), notificationBuilder.build());
+            }
+
 
 
         }

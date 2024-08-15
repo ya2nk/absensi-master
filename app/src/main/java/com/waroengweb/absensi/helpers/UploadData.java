@@ -35,6 +35,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -177,19 +179,19 @@ public class UploadData {
             }
 
             @Override
-            protected Map<String, DataPart> getByteData() throws AuthFailureError {
+            protected Map<String, DataPart> getByteData() throws AuthFailureError, IOException {
                 Map<String, DataPart> params = new HashMap<>();
 
                 for (Ijin ijin : listIjin){
                     long imagename = System.currentTimeMillis();
 
 
-                    if (ijin.getFoto() != null){
+                    /* if (ijin.getFoto() != null){
                         params.put("photo["+ijin.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getFoto())));
-                    }
+                    } */
 
                     if (ijin.getKeterangan() != null){
-                        params.put("keterangan["+ijin.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getKeterangan())));
+                        params.put("keterangan["+ijin.getId()+"]", new DataPart("PDF_"+String.valueOf(imagename)+".pdf",UriUtils.readFile(new File(ijin.getKeterangan()))));
                     }
                 }
 
@@ -212,6 +214,8 @@ public class UploadData {
         bitmap.compress(Bitmap.CompressFormat.JPEG, 70, stream);
         return stream.toByteArray();
     }
+
+
 
     public void getIjinCutiNotAcc() {
         String url = "https://siap.kerincikab.go.id/";

@@ -182,11 +182,11 @@ public class UploadDataDinas {
 
                     try {
                         if (dinas.getFoto() != null) {
-                            params.put("photo[" + dinas.getId() + "]", new DataPart("PIC_1_" + String.valueOf(imagename) + ".jpg", readFile(new File(dinas.getFoto()))));
+                            params.put("photo[" + dinas.getId() + "]", new DataPart("PIC_1_" + String.valueOf(imagename) + ".jpg", UriUtils.readFile(new File(dinas.getFoto()))));
                         }
 
                         if (dinas.getFotoBerkas() != null) {
-                            params.put("photo_berkas[" + dinas.getId() + "]", new DataPart("PIC_2_" + String.valueOf(imagename) + ".jpg", readFile(new File(dinas.getFotoBerkas()))));
+                            params.put("photo_berkas[" + dinas.getId() + "]", new DataPart("pdf_" + String.valueOf(imagename) + ".pdf", UriUtils.readFile(new File(dinas.getFotoBerkas()))));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -215,21 +215,5 @@ public class UploadDataDinas {
         return stream.toByteArray();
     }
 
-    public static byte[] readFile(File file) throws IOException {
-        // Open file
-        RandomAccessFile f = new RandomAccessFile(file, "r");
-        try {
-            // Get and check length
-            long longlength = f.length();
-            int length = (int) longlength;
-            if (length != longlength)
-                throw new IOException("File size >= 2 GB");
-            // Read file and return data
-            byte[] data = new byte[length];
-            f.readFully(data);
-            return data;
-        } finally {
-            f.close();
-        }
-    }
+
 }

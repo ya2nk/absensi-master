@@ -1,5 +1,6 @@
 package com.waroengweb.absensi;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.app.DatePickerDialog;
@@ -23,9 +24,12 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 
+import android.widget.TextView;
 import android.widget.Toast;
 
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
@@ -37,6 +41,7 @@ import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Dinas;
 import com.waroengweb.absensi.helpers.ExifHelper;
+import com.waroengweb.absensi.helpers.UriUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -66,6 +71,7 @@ public class InputDinasActivity extends BaseActivity {
     RadioGroup typeDinas;
     RadioGroup jenisDinas;
     TextInputLayout txtTgl,txtTgl2;
+    TextView txtFile;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +80,7 @@ public class InputDinasActivity extends BaseActivity {
 
         myCalendar = Calendar.getInstance();
 
-
+        txtFile = (TextView) findViewById(R.id.txt_file);
         txtTgl = (TextInputLayout) findViewById(R.id.tgl_lbl);
         txtTgl.getEditText().setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +119,7 @@ public class InputDinasActivity extends BaseActivity {
         });
 
 
-        imagePhoto2 = (ImageView)findViewById(R.id.preview2);
+        //imagePhoto2 = (ImageView)findViewById(R.id.preview2);
 
         db = Room.databaseBuilder(this,
                 AppDatabase.class, "MyDB").allowMainThreadQueries().fallbackToDestructiveMigration().build();
@@ -151,46 +157,24 @@ public class InputDinasActivity extends BaseActivity {
 
     public void takePicture2()
     {
-        final CharSequence[] options = {"Ambil Photo", "Pilih Dari Galeri", "Batal"};
+        final CharSequence[] options = {"Pilih PDF Dari Galeri", "Batal"};
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Silakan Pilih ambil photo atau dari galeri");
+        builder.setTitle("Silakan Pilih File PDF");
 
         builder.setItems(options, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int item) {
 
-                if (options[item].equals("Ambil Photo")) {
-                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-                    StrictMode.setVmPolicy(builder.build());
-                    Intent i;
-                    i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    File pictureFile = null;
-                    try {
-                        pictureFile = getOutputMediaFile();
-                    } catch (IOException ex) {
-                        Toast.makeText(InputDinasActivity.this,
-                                "Photo file can't be created, please try again",
-                                Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    filePhoto2 = Uri.fromFile(pictureFile);
-                    Uri photoUri = FileProvider.getUriForFile(InputDinasActivity.this,
-                            "com.waroengweb.absensi.provider",pictureFile
-                    );
-                    i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                        i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
-                    } else {
-                        i.putExtra("android.intent.extras.CAMERA_FACING", 1);
-                    }
-                    i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
-                    startActivityForResult(i,203);
+               if (options[item].equals("Pilih PDF Dari Galeri")) {
+                    /* Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    startActivityForResult(pickPhoto, 204);//one can be replaced with any action code */
+                   Intent i = new Intent();
+                   i.setType("application/pdf");
+                   i.setAction(Intent.ACTION_GET_CONTENT);
 
-                } else if (options[item].equals("Pilih Dari Galeri")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 204);//one can be replaced with any action code
+                   launchSomeActivity.launch(i);
 
                 } else if (options[item].equals("Batal")) {
                     dialog.dismiss();
@@ -217,20 +201,9 @@ public class InputDinasActivity extends BaseActivity {
             }  else if (requestCode == 202) {
 
             } else if (requestCode == 203){
-                fileString2 = compressImage(filePhoto2).toString();
-                imagePhoto2.setImageURI(Uri.parse(fileString2));
-                imagePhoto2.requestFocus();
-                takePicture2.setText("Ganti Photo");
-                try {
-                    ExifHelper.copyExif(filePhoto2.getPath(), fileString2);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+
             }  else if (requestCode == 204) {
-                File imageFile = new File(getRealPathFromURI(data.getData()));
-                fileString2 = compressImage(Uri.fromFile(imageFile)).toString();
-                imagePhoto2.setImageURI(Uri.parse(fileString2));
-                takePicture2.setText("Ganti Photo");
+
             }
 
         }
@@ -318,7 +291,8 @@ public class InputDinasActivity extends BaseActivity {
         nip.setText("");
         fileString2 = null;
         takePicture2.setText("Photo/Gambar");
-        imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        //imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        txtFile.setText("BELUM PILIH PDF");
         txtTgl.getEditText().getText().clear();
         txtTgl2.getEditText().getText().clear();
     }
@@ -381,4 +355,28 @@ public class InputDinasActivity extends BaseActivity {
         }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
         datePickerDialog.show();
     }
+
+    ActivityResultLauncher<Intent> launchSomeActivity
+            = registerForActivityResult(
+            new ActivityResultContracts
+                    .StartActivityForResult(),
+            result -> {
+                if (result.getResultCode()
+                        == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    // do your operation from here....
+                    if (data != null
+                            && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        File pdfFile = null;
+                        try {
+                            pdfFile = UriUtils.getFileFromUri(getContentResolver(), selectedImageUri, getCacheDir());
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        fileString2 =  pdfFile.toString();
+                        txtFile.setText(fileString2);
+                    }
+                }
+            });
 }

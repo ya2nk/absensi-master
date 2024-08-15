@@ -1,6 +1,7 @@
 package com.waroengweb.absensi.adapter;
 
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
@@ -70,7 +71,7 @@ public class DinasAdapter extends RecyclerView.Adapter<DinasAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, @SuppressLint("RecyclerView") int position) {
         //holder.mImage.setImageResource(listdata.get(position).getThubnail());
         Date tanggalDb = dinasList.get(position).getTanggal();
         String tanggal = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(tanggalDb);
@@ -99,7 +100,7 @@ public class DinasAdapter extends RecyclerView.Adapter<DinasAdapter.MyViewHolder
 
         final RecyclerView.ViewHolder x=holder;
         Glide.with(context)
-                .load(dinasList.get(position).getFotoBerkas())
+                .load(context.getResources().getIdentifier("pdf", "drawable", context.getPackageName()))
                 .into(holder.userImg);
 
         String statusText = dinasList.get(position).getUploaded() == 1 ? "Sudah Dikirim" : "Belum Dikirim";
