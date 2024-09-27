@@ -77,9 +77,17 @@ public class IjinAdapter extends RecyclerView.Adapter<IjinAdapter.MyViewHolder> 
         holder.ket.setText(ijinList.get(position).getTypeIjin());
 
         final RecyclerView.ViewHolder x=holder;
-        Glide.with(context)
-                .load(context.getResources().getIdentifier("pdf", "drawable", context.getPackageName()))
-                .into(holder.userImg);
+        if(ijinList.get(position).getJenisIjin() == "Cuti") {
+            Glide.with(context)
+                    .load(ijinList.get(position).getFoto())
+                    .into(holder.userImg);
+        } else {
+            Glide.with(context)
+                    .load(context.getResources().getIdentifier("pdf", "drawable", context.getPackageName()))
+                    .into(holder.userImg);
+        }
+
+
 
         String statusText = ijinList.get(position).getUploaded() == 1 ? "Sudah Dikirim" : "Belum Dikirim";
         String approveText = ijinList.get(position).getApproved() == 1 ? "Disetujui" : "Belum Disetujui";

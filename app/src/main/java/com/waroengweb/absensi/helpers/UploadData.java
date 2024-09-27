@@ -186,12 +186,17 @@ public class UploadData {
                     long imagename = System.currentTimeMillis();
 
 
-                    /* if (ijin.getFoto() != null){
+                    if (ijin.getFoto() != null){
                         params.put("photo["+ijin.getId()+"]", new DataPart("PIC_1_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getFoto())));
-                    } */
+                    }
 
                     if (ijin.getKeterangan() != null){
-                        params.put("keterangan["+ijin.getId()+"]", new DataPart("PDF_"+String.valueOf(imagename)+".pdf",UriUtils.readFile(new File(ijin.getKeterangan()))));
+                        if(ijin.getJenisIjin() == "Cuti") {
+                            params.put("keterangan["+ijin.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getKeterangan())));
+                        } else {
+                            params.put("keterangan["+ijin.getId()+"]", new DataPart("PDF_"+String.valueOf(imagename)+".pdf",UriUtils.readFile(new File(ijin.getKeterangan()))));
+                        }
+
                     }
                 }
 

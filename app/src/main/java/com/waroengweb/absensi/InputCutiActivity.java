@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -15,7 +16,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -31,7 +31,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
-import androidx.room.Room;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
@@ -59,8 +58,8 @@ public class InputCutiActivity extends AppCompatActivity {
 
     EditText tglText,tglText2;
     Calendar myCalendar;
-    Button saveData,takePicture2;
-    //ImageView imagePhoto,imagePhoto2;
+    Button takePicture,saveData,takePicture2;
+    ImageView imagePhoto,imagePhoto2;
     Uri filePhoto,filePhoto2;
     String fileString,fileString2;
     AppDatabase db;
@@ -93,7 +92,7 @@ public class InputCutiActivity extends AppCompatActivity {
 
 
 
-        /* takePicture = (Button)findViewById(R.id.take_picture);
+        takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -101,22 +100,18 @@ public class InputCutiActivity extends AppCompatActivity {
             }
         });
 
-         */
+
 
         takePicture2 = (Button)findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent();
-                i.setType("application/pdf");
-                i.setAction(Intent.ACTION_GET_CONTENT);
-
-                launchSomeActivity.launch(i);
+                takePicture2();
             }
         });
 
-        //imagePhoto = (ImageView)findViewById(R.id.preview);
-        //imagePhoto2 = (ImageView)findViewById(R.id.preview2);
+        imagePhoto = (ImageView)findViewById(R.id.preview);
+        imagePhoto2 = (ImageView)findViewById(R.id.preview2);
 
         saveData = (Button)findViewById(R.id.save_data);
         saveData.setOnClickListener(new View.OnClickListener() {
@@ -155,7 +150,7 @@ public class InputCutiActivity extends AppCompatActivity {
 
     }
 
-    /* private void takePicture()
+    public void takePicture()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
                 PackageManager.PERMISSION_GRANTED ) {
@@ -185,11 +180,12 @@ public class InputCutiActivity extends AppCompatActivity {
             i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
             startActivityForResult(i,200);
         }
+
     }
 
-     */
 
-    public void takePicture2()
+
+    /* public void takePicture2()
     {
         final CharSequence[] options = { "Pilih Dari Galeri", "Batal"};
 
@@ -203,7 +199,7 @@ public class InputCutiActivity extends AppCompatActivity {
 
                 if (options[item].equals("Pilih Dari Galeri")) {
                     /* Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 202);//one can be replaced with any action code */
+                    startActivityForResult(pickPhoto, 202);//one can be replaced with any action code
                     Intent i = new Intent();
                     i.setType("application/pdf");
                     i.setAction(Intent.ACTION_GET_CONTENT);
@@ -217,7 +213,61 @@ public class InputCutiActivity extends AppCompatActivity {
         });
         builder.show();
     }
+    */
+    public void takePicture2()
+    {
+        final CharSequence[] options = {"Ambil Photo", "Pilih Dari Galeri", "Batal"};
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Silakan Pilih ambil photo atau dari galeri");
+
+        builder.setItems(options, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (options[item].equals("Ambil Photo")) {
+                    StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+                    StrictMode.setVmPolicy(builder.build());
+                    Intent i;
+                    i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    File pictureFile = null;
+                    try {
+                        pictureFile = getOutputMediaFile();
+                    } catch (IOException ex) {
+                        Toast.makeText(InputCutiActivity.this,
+                                "Photo file can't be created, please try again",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    filePhoto2 = Uri.fromFile(pictureFile);
+                    Uri photoUri = FileProvider.getUriForFile(InputCutiActivity.this,
+                            "com.waroengweb.absensi.provider",pictureFile
+                    );
+                    i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                        i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+                    } else {
+                        i.putExtra("android.intent.extras.CAMERA_FACING", 1);
+                    }
+                    i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+                    startActivityForResult(i,201);
+
+                } else if (options[item].equals("Pilih Dari Galeri")) {
+
+                    Intent i = new Intent();
+                    i.setType("image/*");
+                    i.setAction(Intent.ACTION_GET_CONTENT);
+                    launchSomeActivity.launch(i);
+
+
+                } else if (options[item].equals("Batal")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
     private void openDateDialog(int tglNumber)
     {
         new DatePickerDialog(InputCutiActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -257,15 +307,17 @@ public class InputCutiActivity extends AppCompatActivity {
     }
 
     public  File getOutputMediaFile() throws IOException {
+
+
         String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        String mFileName = "JPEG_" + timeStamp + "_";
+        String mFileName = "JPEG_1" + timeStamp + "_";
         File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File mFile = File.createTempFile(mFileName, ".jpg", storageDir);
         return mFile;
     }
 
 
-    /* @Override
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if(resultCode == RESULT_OK){
@@ -280,17 +332,17 @@ public class InputCutiActivity extends AppCompatActivity {
                 imagePhoto2.requestFocus();
                 takePicture2.setText("Ganti Photo");
             } else {
-                File imageFile = new File(getRealPathFromURI(data.getData()));
+               /*  File imageFile = new File(getRealPathFromURI(data.getData()));
                 fileString2 = compressImage(Uri.fromFile(imageFile)).toString();
                 imagePhoto2.setImageURI(Uri.parse(fileString2));
-                takePicture2.setText("Ganti Photo");
+                takePicture2.setText("Ganti Photo"); */
             }
 
         }
 
     }
 
-     */
+
 
         private String getRealPathFromURI(Uri contentURI) {
         String result;
@@ -311,6 +363,7 @@ public class InputCutiActivity extends AppCompatActivity {
         File compressFile;
         try {
             compressFile = new Compressor(this).compressToFile(new File(fileData.getPath()));
+
             return compressFile;
         } catch (Exception e){
             e.printStackTrace();
@@ -327,10 +380,10 @@ public class InputCutiActivity extends AppCompatActivity {
                 return;
             }
 
-            /* if (fileString == null) {
+            if (fileString == null) {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO..").setBackgroundColorInt(Color.RED).show();
                 return;
-            } */
+            }
 
             if (fileString2 == null) {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL FILE PDF").setBackgroundColorInt(Color.RED).show();
@@ -379,10 +432,10 @@ public class InputCutiActivity extends AppCompatActivity {
         tglText.setText("");
         fileString = null;
         fileString2 = null;
-        //takePicture.setText("Ambil Photo");
-        //takePicture2.setText("Photo/Gambar");
-        //imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
-        //imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        takePicture.setText("Ambil Photo");
+        takePicture2.setText("Photo/Gambar");
+        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
+        imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
 
     }
 
@@ -398,16 +451,30 @@ public class InputCutiActivity extends AppCompatActivity {
                     if (data != null
                             && data.getData() != null) {
                         Uri selectedImageUri = data.getData();
-                        File pdfFile = null;
+                        File imageFile = null;
                         try {
-                            pdfFile = UriUtils.getFileFromUri(getContentResolver(), selectedImageUri, getCacheDir());
+                            imageFile = UriUtils.getFileFromUri(getContentResolver(), selectedImageUri, getCacheDir());
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        fileString2 =  pdfFile.toString();
-                        txtFile.setText(fileString2);
+                        fileString2 =  imageFile.toString();
+                        Bitmap selectedImageBitmap;
+                        try {
+                            selectedImageBitmap
+                                    = MediaStore.Images.Media.getBitmap(
+                                    this.getContentResolver(),
+                                    selectedImageUri);
+                            imagePhoto2.setImageBitmap(
+                                    selectedImageBitmap);
+                        }
+                        catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
                     }
                 }
             });
+
+
 
 }
