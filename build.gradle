@@ -3,6 +3,11 @@
 buildscript {
     repositories {
         google()
+        //jcenter()
+        //maven { url 'https://plugins.gradle.org/m2' }
+        mavenCentral()
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://groovy.jfrog.io/artifactory/libs-release/' }
         jcenter()
         
     }
@@ -18,7 +23,13 @@ buildscript {
 allprojects {
     repositories {
         google()
+        //jcenter()
+        mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'https://groovy.jfrog.io/artifactory/libs-release/' }
         jcenter()
+
         
     }
 }

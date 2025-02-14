@@ -149,7 +149,7 @@ public class CutiActivity extends BaseActivity {
         switch (item.getItemId()) {
 
             case R.id.action_upload:
-                new UploadData(this,this).setUploadData("cuti");
+                new UploadData(this,this).setUploadData("Cuti");
                 return true;
 
             default:

@@ -191,10 +191,11 @@ public class UploadData {
                     }
 
                     if (ijin.getKeterangan() != null){
-                        if(ijin.getJenisIjin() == "Cuti") {
-                            params.put("keterangan["+ijin.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getKeterangan())));
-                        } else {
+                        if(ijin.getJenisIjin() != "Cuti") {
                             params.put("keterangan["+ijin.getId()+"]", new DataPart("PDF_"+String.valueOf(imagename)+".pdf",UriUtils.readFile(new File(ijin.getKeterangan()))));
+                        } else {
+                            params.put("keterangan["+ijin.getId()+"]", new DataPart("PIC_2_"+String.valueOf(imagename)+".jpg",convertImageToBytes(ijin.getKeterangan())));
+
                         }
 
                     }
