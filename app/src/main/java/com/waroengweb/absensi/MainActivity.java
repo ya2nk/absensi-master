@@ -111,19 +111,19 @@ public class MainActivity extends BaseActivity {
                         //startActivity(intent);
 
                         String waktu = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
-                        String open = "07:00";
+                        String open = "07:25";
                         Calendar calendar = Calendar.getInstance();
                         int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
                         if (dayWeek == 2) {
-                            open = "07:00";
+                            open = "07:25";
                         }
-                        if (checktimings(open, waktu) && checktimings(waktu, "18:00")) {
+                        if (checktimings(open, waktu) && checktimings(waktu, "16:30")) {
                             intent = new Intent(MainActivity.this, Presensi.class);
                             startActivity(intent);
                         } else {
                             Alerter.create(MainActivity.this)
                                     .setTitle("ERROR")
-                                    .setText("Tidak bisa Melakukan absen diluar jam " + open + " dan 18:00")
+                                    .setText("Tidak bisa Melakukan absen diluar jam " + open + " dan 16:30")
                                     .setBackgroundColorInt(Color.RED).show();
                         }
 

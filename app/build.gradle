@@ -7,7 +7,7 @@ android {
         applicationId 'com.waroengweb.absensi'
         minSdkVersion 21
         targetSdkVersion 34
-        versionCode 23
+        versionCode 24
         versionName "6.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
