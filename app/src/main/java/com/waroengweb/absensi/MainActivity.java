@@ -112,12 +112,14 @@ public class MainActivity extends BaseActivity {
 
                         String waktu = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
                         String open = "07:25";
+                        String close = "16:30";
                         Calendar calendar = Calendar.getInstance();
                         int dayWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                        if (dayWeek == 2) {
-                            open = "07:25";
+                        if (dayWeek == Calendar.FRIDAY) {
+                            open = "07:10";
+                            close = "12:00";
                         }
-                        if (checktimings(open, waktu) && checktimings(waktu, "16:30")) {
+                        if (checktimings(open, waktu) && checktimings(waktu, close)) {
                             intent = new Intent(MainActivity.this, Presensi.class);
                             startActivity(intent);
                         } else {
