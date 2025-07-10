@@ -1,17 +1,22 @@
 package com.waroengweb.absensi;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -45,6 +50,7 @@ public class MainActivity extends BaseActivity {
     public static AppDatabase db;
     TextView counter;
 
+    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +65,10 @@ public class MainActivity extends BaseActivity {
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET,
-                Manifest.permission.ACCESS_NETWORK_STATE
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.SCHEDULE_EXACT_ALARM,
+                Manifest.permission.USE_EXACT_ALARM,
+                Manifest.permission.POST_NOTIFICATIONS
         };
 
         requestPermissions(permissionRequest);
@@ -71,6 +80,7 @@ public class MainActivity extends BaseActivity {
         getPesan();
 
         setCounter();
+        setAlarm();
         //(new UploadData(this,this)).getIjinCutiNotAcc();
     }
 
@@ -93,6 +103,32 @@ public class MainActivity extends BaseActivity {
         } else {
             counter.setVisibility(View.VISIBLE);
         }
+    }
+
+    void setAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, 13);
+        calendar.set(Calendar.MINUTE, 1);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        long alarmTimeInMillis = calendar.getTimeInMillis();
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    this,
+                    112233,
+                    new Intent(this, AlarmReceiver.class).putExtra("ALARM_MSG", "JANGAN LUPA ABSEN SIANG!!"),
+                    PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
+            );
+
+            alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    alarmTimeInMillis,
+                    pendingIntent
+            );
+
     }
 
 

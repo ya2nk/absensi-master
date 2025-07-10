@@ -5,7 +5,7 @@ android {
     compileSdkVersion 34
     defaultConfig {
         applicationId 'com.waroengweb.absensi'
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 34
         versionCode 26
         versionName "6.1"
