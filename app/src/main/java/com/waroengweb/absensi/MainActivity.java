@@ -1,6 +1,9 @@
 package com.waroengweb.absensi;
 
+import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
+
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,6 +12,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +20,10 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +57,7 @@ public class MainActivity extends BaseActivity {
     int PERMISSION_ID = 444;
     public static AppDatabase db;
     TextView counter;
+    AlarmManager alarmManager;
 
     @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
@@ -67,8 +76,8 @@ public class MainActivity extends BaseActivity {
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_NETWORK_STATE,
                 Manifest.permission.SCHEDULE_EXACT_ALARM,
-                Manifest.permission.USE_EXACT_ALARM,
-                Manifest.permission.POST_NOTIFICATIONS
+                Manifest.permission.POST_NOTIFICATIONS,
+                Manifest.permission.USE_EXACT_ALARM
         };
 
         requestPermissions(permissionRequest);
@@ -80,7 +89,13 @@ public class MainActivity extends BaseActivity {
         getPesan();
 
         setCounter();
-        setAlarm();
+        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        if (alarmManager.canScheduleExactAlarms()) {
+            setAlarm();
+        } else {
+            Intent i = new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:com.waroengweb.absensi"));
+            activityResultLauncher.launch(i);
+        }
         //(new UploadData(this,this)).getIjinCutiNotAcc();
     }
 
@@ -109,12 +124,12 @@ public class MainActivity extends BaseActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 13);
-        calendar.set(Calendar.MINUTE, 1);
+        calendar.set(Calendar.MINUTE, 1                      );
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
 
         long alarmTimeInMillis = calendar.getTimeInMillis();
-        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
 
             PendingIntent pendingIntent = PendingIntent.getBroadcast(
                     this,
@@ -122,14 +137,43 @@ public class MainActivity extends BaseActivity {
                     new Intent(this, AlarmReceiver.class).putExtra("ALARM_MSG", "JANGAN LUPA ABSEN SIANG!!"),
                     PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT
             );
-
-            alarmManager.setExactAndAllowWhileIdle(
+        /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            if(alarmManager.canScheduleExactAlarms()) {
+                alarmManager.setExactAndAllowWhileIdle(
+                        AlarmManager.RTC_WAKEUP,
+                        alarmTimeInMillis,
+                        pendingIntent
+                );
+            } //else {
+                //startActivity(new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM));
+            //}
+        } else {
+            alarmManager.setAndAllowWhileIdle(
                     AlarmManager.RTC_WAKEUP,
                     alarmTimeInMillis,
                     pendingIntent
             );
+        }
+        */
+
+
+        alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                alarmTimeInMillis,
+                pendingIntent);
 
     }
+
+    ActivityResultLauncher<Intent> activityResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        setAlarm();
+                    }
+                }
+            });
 
 
     private void setSingleEvent(GridLayout mainGrid) {
