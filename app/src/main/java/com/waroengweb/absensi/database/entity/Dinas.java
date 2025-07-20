@@ -21,6 +21,8 @@ public class Dinas {
     private Date tanggal,tanggal2;
     private String typeDinas;
     private String jenisDinas;
+    private double latitude;
+    private double longitude;
 
     public int getId() {
         return id;
@@ -100,5 +102,21 @@ public class Dinas {
 
     public void setFotoBerkas(String fotoBerkas) {
         this.fotoBerkas = fotoBerkas;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 }

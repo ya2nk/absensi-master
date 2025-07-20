@@ -1,32 +1,24 @@
 package com.waroengweb.absensi;
 
-import static android.provider.Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM;
+
 
 import android.Manifest;
-import android.app.Activity;
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.RequiresApi;
+
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.gridlayout.widget.GridLayout;
@@ -37,18 +29,18 @@ import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.helpers.DBHelper;
 import com.waroengweb.absensi.helpers.GetAsyncPesan;
 import com.waroengweb.absensi.helpers.Session;
-import com.waroengweb.absensi.helpers.UploadData;
 
-import java.sql.Time;
+
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.ZoneId;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
+
 
 public class MainActivity extends BaseActivity {
 
@@ -57,9 +49,9 @@ public class MainActivity extends BaseActivity {
     int PERMISSION_ID = 444;
     public static AppDatabase db;
     TextView counter;
-    AlarmManager alarmManager;
+    //AlarmManager alarmManager;
 
-    @RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
+    //@RequiresApi(api = Build.VERSION_CODES.TIRAMISU)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,9 +67,7 @@ public class MainActivity extends BaseActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
                 Manifest.permission.INTERNET,
                 Manifest.permission.ACCESS_NETWORK_STATE,
-                Manifest.permission.SCHEDULE_EXACT_ALARM,
-                Manifest.permission.POST_NOTIFICATIONS,
-                Manifest.permission.USE_EXACT_ALARM
+
         };
 
         requestPermissions(permissionRequest);
@@ -89,14 +79,8 @@ public class MainActivity extends BaseActivity {
         getPesan();
 
         setCounter();
-        alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        if (alarmManager.canScheduleExactAlarms()) {
-            setAlarm();
-        } else {
-            Intent i = new Intent(ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:com.waroengweb.absensi"));
-            activityResultLauncher.launch(i);
-        }
-        //(new UploadData(this,this)).getIjinCutiNotAcc();
+
+        setAlarm();
     }
 
     public void setCounter() {
@@ -121,6 +105,18 @@ public class MainActivity extends BaseActivity {
     }
 
     void setAlarm() {
+        Intent intent = new Intent(android.provider.AlarmClock.ACTION_SET_ALARM)
+                .putExtra(android.provider.AlarmClock.EXTRA_HOUR, 13)
+                .putExtra(android.provider.AlarmClock.EXTRA_MINUTES, 1)
+                .putExtra(android.provider.AlarmClock.EXTRA_MESSAGE, "JANGAN LUPA ABSEN SIANG")
+                .putExtra(android.provider.AlarmClock.EXTRA_SKIP_UI, true);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+    }
+
+    /* void setAlarm() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, 13);
@@ -154,7 +150,7 @@ public class MainActivity extends BaseActivity {
                     pendingIntent
             );
         }
-        */
+
 
 
         alarmManager.setExactAndAllowWhileIdle(
@@ -174,7 +170,7 @@ public class MainActivity extends BaseActivity {
                     }
                 }
             });
-
+    */
 
     private void setSingleEvent(GridLayout mainGrid) {
         //Loop all child item of Main Grid

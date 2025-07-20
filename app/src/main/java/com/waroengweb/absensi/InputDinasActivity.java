@@ -1,20 +1,27 @@
 package com.waroengweb.absensi;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 
 import android.app.DatePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 
+import android.provider.Settings;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -22,6 +29,7 @@ import android.widget.Button;
 
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 
 import android.widget.TextView;
@@ -30,11 +38,26 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.FileProvider;
 import androidx.room.Room;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.utility.RegexTemplate;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputLayout;
 
 import com.tapadoo.alerter.Alerter;
@@ -52,12 +75,14 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static com.basgeekball.awesomevalidation.ValidationStyle.TEXT_INPUT_LAYOUT;
 
 import id.zelory.compressor.Compressor;
 
-public class InputDinasActivity extends BaseActivity {
+public class InputDinasActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, OnMapReadyCallback {
 
     Calendar myCalendar;
     int editTextSelect = 0;
@@ -72,6 +97,15 @@ public class InputDinasActivity extends BaseActivity {
     RadioGroup jenisDinas;
     TextInputLayout txtTgl,txtTgl2;
     TextView txtFile;
+    LinearLayout mapContainer;
+    private Location location;
+    private GoogleApiClient googleApiClient;
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 3000;
+    private LocationRequest locationRequest;
+    private static final long UPDATE_INTERVAL = 2000, FASTEST_INTERVAL = 2000;
+    private Marker marker;
+    private GoogleMap googleMap;
+    Double latitude,longitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,18 +181,42 @@ public class InputDinasActivity extends BaseActivity {
                     case R.id.dalam_dinas:
                         jenisText = "dalam_dinas";
                         txtTgl2.setVisibility(View.GONE);
+                        mapContainer.setVisibility(View.VISIBLE);
                         break;
                     case R.id.luar_dinas:
                         jenisText = "luar_dinas";
                         txtTgl2.setVisibility(View.VISIBLE);
+                        mapContainer.setVisibility(View.GONE);
                         break;
 
                 }
                 txtTgl.getEditText().getText().clear();
             }
         });
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+
+        googleApiClient = new GoogleApiClient.Builder(this).
+                addApi(LocationServices.API).
+                addConnectionCallbacks(this).
+                addOnConnectionFailedListener(this).build();
+
+        mapContainer = findViewById(R.id.map_container);
     }
 
+    @Override
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
+    }
+
+    private boolean isLocationEnabled() {
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+
+    }
     public void takePicture2()
     {
         final CharSequence[] options = {"Pilih PDF Dari Galeri", "Batal"};
@@ -253,9 +311,18 @@ public class InputDinasActivity extends BaseActivity {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO BERKAS").setBackgroundColorInt(Color.RED).show();
                 return;
             }
-            if (jenisText == "luar_dinas") {
+            if (Objects.equals(jenisText, "luar_dinas")) {
                 if (txtTgl2.getEditText().getText().toString().isEmpty()) {
                     Alerter.create(this).setTitle("ERROR").setText("TANGGAL AKHIR BELUM DIPILIH").setBackgroundColorInt(Color.RED).show();
+                    return;
+                }
+                latitude = 0.0;
+                longitude = 0.0;
+            }
+
+            if(Objects.equals(jenisText, "dalam_dinas")) {
+                if (latitude == null || longitude == null ){
+                    Alerter.create(this).setTitle("ERROR").setText("LOKASI GPS MASIH KOSONG").setBackgroundColorInt(Color.RED).show();
                     return;
                 }
             }
@@ -267,6 +334,8 @@ public class InputDinasActivity extends BaseActivity {
             dinas.setFotoBerkas(fileString2);
             dinas.setTypeDinas(typeText);
             dinas.setJenisDinas(jenisText);
+            dinas.setLatitude(latitude);
+            dinas.setLongitude(latitude);
 
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             Date tanggalNew,tanggalNew2;
@@ -383,4 +452,139 @@ public class InputDinasActivity extends BaseActivity {
                     }
                 }
             });
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        if (isLocationEnabled()) {
+
+            if (location != null) {
+                if (location.isFromMockProvider()) {
+                    Alerter.create(InputDinasActivity.this)
+                            .setTitle("ERROR")
+                            .setText("Terdeteksi menggunakan Fake Gps")
+                            .setBackgroundColorInt(Color.RED).show();
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 1500);
+                }
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+                //loadMapScene();
+                //Toast.makeText(this,"Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude(),Toast.LENGTH_SHORT).show();
+                marker.setPosition(new LatLng(latitude,longitude));
+                //locationTv.setText("Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude());
+            } else {
+                Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(intent);
+            }
+        }
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        if (isLocationEnabled()) {
+            // Permissions ok, we get last location
+            location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+
+
+            if (location != null) {
+                if (location.isFromMockProvider()) {
+                    Alerter.create(InputDinasActivity.this)
+                            .setTitle("ERROR")
+                            .setText("Terdeteksi menggunakan Fake Gps")
+                            .setBackgroundColorInt(Color.RED).show();
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            finish();
+                        }
+                    }, 1500);
+                }
+                //Toast.makeText(this,"Latitude : " + location.getLatitude() + "\nLongitude : " + location.getLongitude(),Toast.LENGTH_SHORT).show();
+                latitude = location.getLatitude();
+                longitude = location.getLongitude();
+
+                LatLng latLng = new LatLng(latitude, longitude);
+                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title("I am here!");
+                googleMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                marker = googleMap.addMarker(markerOptions);
+
+
+            }
+            startLocationUpdates();
+        } else {
+            Toast.makeText(this, "Turn on location", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            startActivity(intent);
+        }
+    }
+
+    private void startLocationUpdates() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            Toast.makeText(this, "You need to enable permissions to display location !", Toast.LENGTH_SHORT).show();
+        }
+
+        LocationServices.FusedLocationApi.requestLocationUpdates(googleApiClient, locationRequest, this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (googleApiClient != null) {
+            googleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            // stop location updates
+            if (googleApiClient != null  &&  googleApiClient.isConnected()) {
+                LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, this);
+                googleApiClient.disconnect();
+
+
+            }
+        }
+
+    }
+
 }
