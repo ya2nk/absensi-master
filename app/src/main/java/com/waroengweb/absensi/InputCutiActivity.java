@@ -60,7 +60,7 @@ public class InputCutiActivity extends AppCompatActivity {
     Calendar myCalendar;
     Button takePicture,saveData,takePicture2;
     ImageView imagePhoto,imagePhoto2;
-    Uri filePhoto,filePhoto2;
+    //Uri filePhoto,filePhoto2;
     String fileString,fileString2;
     AppDatabase db;
     AutoCompleteTextView nip,editTextFilledExposedDropdown;
@@ -91,7 +91,7 @@ public class InputCutiActivity extends AppCompatActivity {
         });
 
 
-
+        /*
         takePicture = (Button)findViewById(R.id.take_picture);
         takePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,18 +100,22 @@ public class InputCutiActivity extends AppCompatActivity {
             }
         });
 
-
+        */
 
         takePicture2 = (Button)findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePicture2();
+                Intent i = new Intent();
+                i.setType("application/pdf");
+                i.setAction(Intent.ACTION_GET_CONTENT);
+
+                launchSomeActivity.launch(i);
             }
         });
 
-        imagePhoto = (ImageView)findViewById(R.id.preview);
-        imagePhoto2 = (ImageView)findViewById(R.id.preview2);
+        //imagePhoto = (ImageView)findViewById(R.id.preview);
+        //imagePhoto2 = (ImageView)findViewById(R.id.preview2);
 
         saveData = (Button)findViewById(R.id.save_data);
         saveData.setOnClickListener(new View.OnClickListener() {
@@ -149,7 +153,7 @@ public class InputCutiActivity extends AppCompatActivity {
         editTextFilledExposedDropdown.setAdapter(adapter2);
 
     }
-
+    /*
     public void takePicture()
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
@@ -184,8 +188,8 @@ public class InputCutiActivity extends AppCompatActivity {
     }
 
 
-
-    /* public void takePicture2()
+    /*
+    public void takePicture2()
     {
         final CharSequence[] options = { "Pilih Dari Galeri", "Batal"};
 
@@ -198,7 +202,7 @@ public class InputCutiActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
 
                 if (options[item].equals("Pilih Dari Galeri")) {
-                    /* Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                     startActivityForResult(pickPhoto, 202);//one can be replaced with any action code
                     Intent i = new Intent();
                     i.setType("application/pdf");
@@ -213,7 +217,7 @@ public class InputCutiActivity extends AppCompatActivity {
         });
         builder.show();
     }
-    */
+    /*
     public void takePicture2()
     {
         final CharSequence[] options = {"Ambil Photo", "Pilih Dari Galeri", "Batal"};
@@ -268,6 +272,7 @@ public class InputCutiActivity extends AppCompatActivity {
         });
         builder.show();
     }
+    */
     private void openDateDialog(int tglNumber)
     {
         new DatePickerDialog(InputCutiActivity.this, new DatePickerDialog.OnDateSetListener() {
@@ -305,7 +310,7 @@ public class InputCutiActivity extends AppCompatActivity {
             }
         }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH)).show();
     }
-
+    /*
     public  File getOutputMediaFile() throws IOException {
 
 
@@ -316,12 +321,12 @@ public class InputCutiActivity extends AppCompatActivity {
         return mFile;
     }
 
-
+    /*
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
         if(resultCode == RESULT_OK){
-            if (requestCode == 200){
+            /* if (requestCode == 200){
                 fileString = compressImage(filePhoto).toString();
                 imagePhoto.setImageURI(Uri.parse(fileString));
                 imagePhoto.requestFocus();
@@ -335,12 +340,38 @@ public class InputCutiActivity extends AppCompatActivity {
                /*  File imageFile = new File(getRealPathFromURI(data.getData()));
                 fileString2 = compressImage(Uri.fromFile(imageFile)).toString();
                 imagePhoto2.setImageURI(Uri.parse(fileString2));
-                takePicture2.setText("Ganti Photo"); */
+                takePicture2.setText("Ganti Photo");
             }
+
 
         }
 
     }
+    */
+
+ActivityResultLauncher<Intent> launchSomeActivity
+        = registerForActivityResult(
+        new ActivityResultContracts
+                .StartActivityForResult(),
+        result -> {
+            if (result.getResultCode()
+                    == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                // do your operation from here....
+                if (data != null
+                        && data.getData() != null) {
+                    Uri selectedImageUri = data.getData();
+                    File pdfFile = null;
+                    try {
+                        pdfFile = UriUtils.getFileFromUri(getContentResolver(), selectedImageUri, getCacheDir());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    fileString2 =  pdfFile.toString();
+                    txtFile.setText(fileString2);
+                }
+            }
+        });
 
 
 
@@ -357,7 +388,7 @@ public class InputCutiActivity extends AppCompatActivity {
         }
         return result;
     }
-
+    /*
     public File compressImage(Uri fileData){
 
         File compressFile;
@@ -371,7 +402,7 @@ public class InputCutiActivity extends AppCompatActivity {
 
         return null;
     }
-
+    */
     public void saveData()
     {
         if(validation.validate()) {
@@ -380,10 +411,10 @@ public class InputCutiActivity extends AppCompatActivity {
                 return;
             }
 
-            if (fileString == null) {
+            /* if (fileString == null) {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO..").setBackgroundColorInt(Color.RED).show();
                 return;
-            }
+            } */
 
             if (fileString2 == null) {
                 Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL FILE PDF").setBackgroundColorInt(Color.RED).show();
@@ -439,7 +470,7 @@ public class InputCutiActivity extends AppCompatActivity {
 
     }
 
-    ActivityResultLauncher<Intent> launchSomeActivity
+    /* ActivityResultLauncher<Intent> launchSomeActivity
             = registerForActivityResult(
             new ActivityResultContracts
                     .StartActivityForResult(),
@@ -475,6 +506,6 @@ public class InputCutiActivity extends AppCompatActivity {
                 }
             });
 
-
+            */
 
 }

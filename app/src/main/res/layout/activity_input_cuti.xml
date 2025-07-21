@@ -7,7 +7,7 @@
 
 
 
-    <include layout="@layout/content_input_cuti" />
+    <include layout="@layout/content_input_cuti_old" />
 
 
 
