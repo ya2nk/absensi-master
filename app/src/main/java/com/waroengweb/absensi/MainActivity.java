@@ -105,14 +105,17 @@ public class MainActivity extends BaseActivity {
     }
 
     void setAlarm() {
-        Intent intent = new Intent(android.provider.AlarmClock.ACTION_SET_ALARM)
-                .putExtra(android.provider.AlarmClock.EXTRA_HOUR, 13)
-                .putExtra(android.provider.AlarmClock.EXTRA_MINUTES, 1)
-                .putExtra(android.provider.AlarmClock.EXTRA_MESSAGE, "JANGAN LUPA ABSEN SIANG")
-                .putExtra(android.provider.AlarmClock.EXTRA_SKIP_UI, true);
+        String waktu = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date());
+        if(checktimings(waktu,"13:00")) {
+            Intent intent = new Intent(android.provider.AlarmClock.ACTION_SET_ALARM)
+                    .putExtra(android.provider.AlarmClock.EXTRA_HOUR, 13)
+                    .putExtra(android.provider.AlarmClock.EXTRA_MINUTES, 1)
+                    .putExtra(android.provider.AlarmClock.EXTRA_MESSAGE, "JANGAN LUPA ABSEN SIANG")
+                    .putExtra(android.provider.AlarmClock.EXTRA_SKIP_UI, true);
 
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
+            if (intent.resolveActivity(getPackageManager()) != null) {
+                startActivity(intent);
+            }
         }
     }
 
