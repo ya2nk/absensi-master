@@ -57,14 +57,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.textfield.TextInputLayout;
 
 import com.tapadoo.alerter.Alerter;
 import com.waroengweb.absensi.database.AppDatabase;
 import com.waroengweb.absensi.database.entity.Dinas;
-import com.waroengweb.absensi.helpers.ExifHelper;
 import com.waroengweb.absensi.helpers.UriUtils;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -79,6 +80,7 @@ import java.util.Objects;
 
 import static com.basgeekball.awesomevalidation.ValidationStyle.TEXT_INPUT_LAYOUT;
 
+
 import id.zelory.compressor.Compressor;
 
 public class InputDinasActivity extends BaseActivity implements GoogleApiClient.ConnectionCallbacks,
@@ -86,7 +88,7 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
 
     Calendar myCalendar;
     int editTextSelect = 0;
-    Button saveData,takePicture2;
+    Button saveData,takePicture2,takePicture;
     Uri filePhoto2;
     String fileString2,typeText="Sore",jenisText="dalam_dinas";
     ImageView imagePhoto2;
@@ -96,7 +98,7 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
     RadioGroup typeDinas;
     RadioGroup jenisDinas;
     TextInputLayout txtTgl,txtTgl2;
-    TextView txtFile;
+    TextView txtFile,showMap;
     LinearLayout mapContainer;
     private Location location;
     private GoogleApiClient googleApiClient;
@@ -106,7 +108,9 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
     private Marker marker;
     private GoogleMap googleMap;
     Double latitude,longitude;
-
+    Uri filePhoto;
+    String fileString;
+    ImageView imagePhoto;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -135,6 +139,15 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
             }
         });
         txtTgl2.setVisibility(View.GONE);
+        takePicture = (Button)findViewById(R.id.take_picture);
+
+        takePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent();
+                takePicture();
+            }
+        });
 
         takePicture2 = (Button)findViewById(R.id.take_picture2);
         takePicture2.setOnClickListener(new View.OnClickListener() {
@@ -182,11 +195,15 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
                         jenisText = "dalam_dinas";
                         txtTgl2.setVisibility(View.GONE);
                         mapContainer.setVisibility(View.VISIBLE);
+                        imagePhoto.setVisibility(View.VISIBLE);
+                        takePicture.setVisibility(View.VISIBLE);
                         break;
                     case R.id.luar_dinas:
                         jenisText = "luar_dinas";
                         txtTgl2.setVisibility(View.VISIBLE);
                         mapContainer.setVisibility(View.GONE);
+                        imagePhoto.setVisibility(View.GONE);
+                        takePicture.setVisibility(View.GONE);
                         break;
 
                 }
@@ -205,7 +222,92 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
                 addOnConnectionFailedListener(this).build();
 
         mapContainer = findViewById(R.id.map_container);
+        imagePhoto = (ImageView)findViewById(R.id.preview);
+
+        showMap = (TextView)findViewById(R.id.showMap);
+        showMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String urlAddress = "http://maps.google.com/maps?q="+ latitude  +"," + longitude +"( Location )&iwloc=A&hl=es";
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlAddress));
+                startActivity(intent);
+
+            }
+        });
     }
+
+    public void takePicture()
+    {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED ) {
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+            Intent i;
+            i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            File pictureFile = null;
+            try {
+                pictureFile = getOutputMediaFile();
+            } catch (IOException ex) {
+                Toast.makeText(this,
+                        "Photo file can't be created, please try again",
+                        Toast.LENGTH_SHORT).show();
+                return;
+            }
+            filePhoto = Uri.fromFile(pictureFile);
+            Uri photoUri = FileProvider.getUriForFile(this,
+                    "com.waroengweb.absensi.provider",pictureFile
+            );
+            i.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                i.putExtra("android.intent.extras.LENS_FACING_FRONT", 1);
+            } else {
+                i.putExtra("android.intent.extras.CAMERA_FACING", 1);
+            }
+            i.putExtra("android.intent.extra.USE_FRONT_CAMERA", true);
+            startActivityForResult(i,200);
+        }
+
+    }
+
+    public  File getOutputMediaFile() throws IOException {
+
+
+        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        String mFileName = "JPEG_1" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File mFile = File.createTempFile(mFileName, ".jpg", storageDir);
+        return mFile;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode,resultCode,data);
+        if(resultCode == RESULT_OK){
+            if (requestCode == 200) {
+                fileString = compressImage(filePhoto).toString();
+                imagePhoto.setImageURI(Uri.parse(fileString));
+                imagePhoto.requestFocus();
+                takePicture.setText("Ganti Photo");
+            }
+            /*
+            } else if (requestCode == 201) {
+                fileString2 = compressImage(filePhoto2).toString();
+                imagePhoto2.setImageURI(Uri.parse(fileString2));
+                imagePhoto2.requestFocus();
+                takePicture2.setText("Ganti Photo");
+            } else {
+               File imageFile = new File(getRealPathFromURI(data.getData()));
+                fileString2 = compressImage(Uri.fromFile(imageFile)).toString();
+                imagePhoto2.setImageURI(Uri.parse(fileString2));
+                takePicture2.setText("Ganti Photo");
+            }
+            */
+
+        }
+
+    }
+
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -246,31 +348,9 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
         builder.show();
     }
 
-    public  File getOutputMediaFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
-        String mFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File mFile = File.createTempFile(mFileName, ".jpg", storageDir);
-        return mFile;
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode,resultCode,data);
-        if(resultCode == RESULT_OK){
-            if (requestCode == 201){
 
-            }  else if (requestCode == 202) {
 
-            } else if (requestCode == 203){
-
-            }  else if (requestCode == 204) {
-
-            }
-
-        }
-
-    }
 
     public File compressImage(Uri fileData){
 
@@ -325,12 +405,18 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
                     Alerter.create(this).setTitle("ERROR").setText("LOKASI GPS MASIH KOSONG").setBackgroundColorInt(Color.RED).show();
                     return;
                 }
+
+                if (fileString == null) {
+                    Alerter.create(this).setTitle("ERROR").setText("BELUM AMBIL PHOTO..").setBackgroundColorInt(Color.RED).show();
+                    return;
+                }
             }
 
             Dinas dinas = new Dinas();
             dinas.setNip(nip.getText().toString());
             dinas.setApproved(0);
             dinas.setUploaded(0);
+            dinas.setFoto(fileString);
             dinas.setFotoBerkas(fileString2);
             dinas.setTypeDinas(typeText);
             dinas.setJenisDinas(jenisText);

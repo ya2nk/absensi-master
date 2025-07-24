@@ -72,7 +72,7 @@ public class UploadData {
             listIjin = db.IjinDao().getAllCutiNotUploaded();
         }
 
-        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+"api/save_ijin_new",
+        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+"api/save_ijin_new2",
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {

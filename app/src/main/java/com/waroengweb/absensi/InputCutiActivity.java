@@ -430,7 +430,7 @@ ActivityResultLauncher<Intent> launchSomeActivity
             cuti.setNip(nip.getText().toString());
             cuti.setApproved(0);
             cuti.setUploaded(0);
-            cuti.setFoto(fileString);
+            cuti.setFoto("");
             cuti.setKeterangan(fileString2);
             cuti.setLamaHari(1);
             cuti.setJenisIjin("Cuti");
