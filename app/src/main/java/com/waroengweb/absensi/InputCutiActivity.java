@@ -430,7 +430,7 @@ ActivityResultLauncher<Intent> launchSomeActivity
             cuti.setNip(nip.getText().toString());
             cuti.setApproved(0);
             cuti.setUploaded(0);
-            cuti.setFoto("");
+            cuti.setFoto(fileString);
             cuti.setKeterangan(fileString2);
             cuti.setLamaHari(1);
             cuti.setJenisIjin("Cuti");
@@ -463,10 +463,10 @@ ActivityResultLauncher<Intent> launchSomeActivity
         tglText.setText("");
         fileString = null;
         fileString2 = null;
-        takePicture.setText("Ambil Photo");
-        takePicture2.setText("Photo/Gambar");
-        imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
-        imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
+        //takePicture.setText("Ambil Photo");
+        //takePicture2.setText("Photo/Gambar");
+        //imagePhoto.setImageDrawable(getResources().getDrawable(R.drawable.index));
+        //imagePhoto2.setImageDrawable(getResources().getDrawable(R.drawable.doc));
 
     }
 

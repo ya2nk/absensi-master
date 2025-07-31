@@ -338,7 +338,7 @@
             android:layout_centerHorizontal="true"
             android:layout_gravity="center_vertical"
             android:layout_marginBottom="0dp"
-            android:text="\u00a9 Pemerintah Kabupaten Kerinci 2025 ver 7.0" />
+            android:text="\u00a9 Pemerintah Kabupaten Kerinci 2025 ver 7.2" />
 
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

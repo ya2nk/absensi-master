@@ -213,7 +213,7 @@ public class DataPresensi extends BaseActivity {
         final List<Absen> listAbsen;
         listAbsen = db.AbsenDao().getAllAbsenNotUploaded();
 
-        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+getString(R.string.ccc),
+        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+getString(R.string.ddd),
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {

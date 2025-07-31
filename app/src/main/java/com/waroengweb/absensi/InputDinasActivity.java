@@ -421,7 +421,7 @@ public class InputDinasActivity extends BaseActivity implements GoogleApiClient.
             dinas.setTypeDinas(typeText);
             dinas.setJenisDinas(jenisText);
             dinas.setLatitude(latitude);
-            dinas.setLongitude(latitude);
+            dinas.setLongitude(longitude);
 
             DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
             Date tanggalNew,tanggalNew2;

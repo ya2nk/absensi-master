@@ -66,7 +66,7 @@ public class UploadDataAbsen {
         listAbsen.add(absen);
 
 
-        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+context.getString(R.string.ccc),
+        VolleyMultipartRequest mReq = new VolleyMultipartRequest(Request.Method.POST, url+context.getString(R.string.ddd),
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
