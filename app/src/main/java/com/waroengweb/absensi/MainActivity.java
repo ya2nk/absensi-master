@@ -317,13 +317,13 @@ public class MainActivity extends BaseActivity {
         List<String> apps = new ArrayList<>();
         List<String> blackListApp = new ArrayList<>();
 
-        blackListApp.add("com.lexa.fakegps");
-        blackListApp.add("com.blogspot.newapphorizons.fakegps");
-        blackListApp.add("es.pulimento.fakecamera");
-        blackListApp.add("com.VorensStudios.FakeCamera");
-        blackListApp.add("com.adriangl.pict2cam");
-        blackListApp.add("com.just4funtools.fakegpslocationprofessional");
-        blackListApp.add("com.gsmartstudio.fakegps");
+        //blackListApp.add("com.lexa.fakegps");
+        //blackListApp.add("com.blogspot.newapphorizons.fakegps");
+        //blackListApp.add("es.pulimento.fakecamera");
+        //blackListApp.add("com.VorensStudios.FakeCamera");
+        //blackListApp.add("com.adriangl.pict2cam");
+        //blackListApp.add("com.just4funtools.fakegpslocationprofessional");
+        //blackListApp.add("com.gsmartstudio.fakegps");
 
         int i = 0;
         boolean fake = false;
